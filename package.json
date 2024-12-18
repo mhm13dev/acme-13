@@ -2,5 +2,8 @@
   "name": "acme-13",
   "version": "1.0.0",
   "private": true,
-  "author": "mhm13dev"
+  "author": "mhm13dev",
+  "scripts": {
+    "dev": "pnpm -r run dev"
+  }
 }
