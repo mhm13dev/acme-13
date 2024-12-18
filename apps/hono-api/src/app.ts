@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { users } from "./routes/users/index.js";
 
 export const app = new Hono();
 
@@ -12,3 +13,5 @@ app.get("/", async (c) => {
     },
   });
 });
+
+app.route("/", users);
