@@ -40,6 +40,7 @@ users.post("/signup", zValidator("json", signupUserSchema), async (ctx) => {
       },
     });
   } catch (error) {
+    console.error(error);
     return ctx.json({
       response_code: "error",
       message: error instanceof Error ? error.message : "An error occurred",
