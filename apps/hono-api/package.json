@@ -5,7 +5,8 @@
     "dev": "tsx watch src/index.ts",
     "db:drizzle-kit": "NODE_OPTIONS='--import tsx' drizzle-kit",
     "db:generate": "pnpm run db:drizzle-kit generate --config ./drizzle.config.ts",
-    "db:migrate": "pnpm run db:drizzle-kit migrate --config ./drizzle.config.ts"
+    "db:migrate": "pnpm run db:drizzle-kit migrate --config ./drizzle.config.ts",
+    "db:studio": "pnpm run db:drizzle-kit studio --config ./drizzle.config.ts"
   },
   "dependencies": {
     "@hono/node-server": "^1.13.7",
