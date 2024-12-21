@@ -12,4 +12,27 @@ export const app = new Hono()
       },
     });
   })
-  .route("/", users);
+  .route("/", users)
+  .notFound((c) => {
+    return c.json(
+      {
+        response_code: "path_not_found",
+        message: "Path not found",
+        data: {
+          method: c.req.method,
+          path: c.req.path,
+        },
+      },
+      404
+    );
+  })
+  .onError((error, c) => {
+    console.error(error);
+    return c.json(
+      {
+        response_code: "error",
+        message: error instanceof Error ? error.message : "An error occurred",
+      },
+      500
+    );
+  });
