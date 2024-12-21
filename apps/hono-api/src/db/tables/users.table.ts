@@ -7,3 +7,5 @@ export const usersTable = pgTable("users", {
   password: varchar({ length: 255 }).notNull(),
   ...timestamps,
 });
+
+export type User = typeof usersTable.$inferSelect;
