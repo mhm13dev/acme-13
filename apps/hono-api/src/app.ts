@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { users } from "./routes/user/user.routes.js";
+import { AppError } from "./utils/app-error.js";
 
 export const app = new Hono()
   .get("/", async (c) => {
@@ -28,10 +29,19 @@ export const app = new Hono()
   })
   .onError((error, c) => {
     console.error(error);
+    if (error instanceof AppError) {
+      return c.json(
+        {
+          response_code: error.response_code,
+          message: error.message,
+        },
+        error.statusCode
+      );
+    }
     return c.json(
       {
-        response_code: "error",
-        message: error instanceof Error ? error.message : "An error occurred",
+        response_code: "internal_server_error",
+        message: error.message ?? "Internal server error",
       },
       500
     );
