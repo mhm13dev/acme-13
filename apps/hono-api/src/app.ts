@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { users } from "./routes/user/user.routes.js";
-import { AppError } from "./utils/app-error.js";
+import { ApiError } from "./utils/api-error.js";
 import { ApiResponse, ApiResponseCode } from "./utils/api-response.js";
 
 export const app = new Hono()
@@ -32,7 +32,7 @@ export const app = new Hono()
   })
   .onError((error, c) => {
     console.error(error);
-    if (error instanceof AppError) {
+    if (error instanceof ApiError) {
       return c.json(
         new ApiResponse({
           response_code: error.response_code,

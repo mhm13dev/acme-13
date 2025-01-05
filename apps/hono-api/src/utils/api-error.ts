@@ -1,7 +1,7 @@
 import type { StatusCode } from "hono/utils/http-status";
 import type { ApiResponseCode } from "./api-response.js";
 
-export class AppError extends Error {
+export class ApiError extends Error {
   constructor(
     public response_code: ApiResponseCode,
     message: string,
