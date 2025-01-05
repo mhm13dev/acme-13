@@ -1,8 +1,8 @@
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { ApiResponse, ApiResponseCode } from "../../utils/api-response.js";
-import { signupUserSchema } from "./user.schema.js";
-import { signupUser } from "./user.service.js";
+import { loginUserSchema, signupUserSchema } from "./user.schema.js";
+import { loginUser, signupUser } from "./user.service.js";
 
 export const users = new Hono()
   .basePath("/users")
@@ -23,5 +23,28 @@ export const users = new Hono()
         },
       }),
       201
+    );
+  })
+  /**
+   * Login a user
+   */
+  .post("/login", zValidator("json", loginUserSchema), async (ctx) => {
+    const { email, password } = ctx.req.valid("json");
+
+    const { user, accessToken, refreshToken } = await loginUser({
+      email,
+      password,
+    });
+
+    return ctx.json(
+      new ApiResponse({
+        response_code: ApiResponseCode.ok,
+        message: "User logged in successfully",
+        data: {
+          user,
+          accessToken,
+          refreshToken,
+        },
+      })
     );
   });

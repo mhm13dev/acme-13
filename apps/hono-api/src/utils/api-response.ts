@@ -2,6 +2,7 @@ export enum ApiResponseCode {
   ok = "ok",
   path_not_found = "path_not_found",
   internal_server_error = "internal_server_error",
+  resource_not_found = "resource_not_found",
 }
 
 export class ApiResponse {

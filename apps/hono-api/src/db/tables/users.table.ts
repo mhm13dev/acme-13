@@ -1,5 +1,7 @@
+import { relations } from "drizzle-orm";
 import { integer, pgTable, varchar } from "drizzle-orm/pg-core";
 import { timestamps } from "../helpers/columns.helpers.js";
+import { sessionsTable } from "./sessions.table.js";
 
 export const usersTable = pgTable("users", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -9,3 +11,9 @@ export const usersTable = pgTable("users", {
 });
 
 export type User = typeof usersTable.$inferSelect;
+
+export type UserWithoutSensitiveFields<T = User> = Omit<T, "password">;
+
+export const usersRelations = relations(usersTable, ({ many }) => ({
+  sessions: many(sessionsTable),
+}));
