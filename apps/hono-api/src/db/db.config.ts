@@ -1,4 +1,4 @@
-import "dotenv/config";
+import { env } from "../config/env.js";
 import type { DrizzleConfig } from "drizzle-orm";
 
 /**
@@ -7,5 +7,5 @@ import type { DrizzleConfig } from "drizzle-orm";
  */
 export const dbConfig = {
   casing: "snake_case",
-  logger: true,
+  logger: env.APP_ENV === "development",
 } satisfies DrizzleConfig;

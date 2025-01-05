@@ -2,6 +2,7 @@ import * as argon2 from "argon2";
 import { and, eq } from "drizzle-orm";
 import * as jose from "jose";
 import cloneDeep from "clone-deep";
+import { env } from "../../config/env.js";
 import { db } from "../../db/index.js";
 import {
   usersTable,
@@ -14,12 +15,9 @@ import { ApiResponseCode } from "../../utils/api-response.js";
 import { ApiError } from "../../utils/api-error.js";
 import type { IJwtPayload, TokenType } from "./user.types.js";
 
-const accessTokenSecret = new TextEncoder().encode(
-  process.env.JWT_ACCESS_TOKEN_SECRET
-);
-const refreshTokenSecret = new TextEncoder().encode(
-  process.env.JWT_REFRESH_TOKEN_SECRET
-);
+// Convert secrets to `Uint8Array`
+const accessTokenSecret = new TextEncoder().encode(env.ACCESS_TOKEN_SECRET);
+const refreshTokenSecret = new TextEncoder().encode(env.REFRESH_TOKEN_SECRET);
 
 /**
  * Signup a new user

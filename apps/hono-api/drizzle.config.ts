@@ -1,5 +1,6 @@
 import { defineConfig } from "drizzle-kit";
 import { dbConfig } from "./src/db/db.config.js";
+import { env } from "./src/config/env.js";
 
 export default defineConfig({
   ...dbConfig,
@@ -7,6 +8,6 @@ export default defineConfig({
   schema: "./src/db/tables/*.table.ts",
   dialect: "postgresql",
   dbCredentials: {
-    url: process.env.DATABASE_URL!,
+    url: env.DATABASE_URL,
   },
 });
