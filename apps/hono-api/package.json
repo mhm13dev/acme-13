@@ -3,6 +3,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
+    "dev:inspect": "tsx watch --inspect src/index.ts",
     "db:drizzle-kit": "NODE_OPTIONS='--import tsx' drizzle-kit",
     "db:generate": "pnpm run db:drizzle-kit generate --config ./drizzle.config.ts",
     "db:migrate": "pnpm run db:drizzle-kit migrate --config ./drizzle.config.ts",
