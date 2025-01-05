@@ -5,6 +5,7 @@ export enum ApiResponseCode {
   resource_not_found = "resource_not_found",
   access_token_required = "access_token_required",
   refresh_token_required = "refresh_token_required",
+  unauthorized = "unauthorized",
 }
 
 export class ApiResponse {

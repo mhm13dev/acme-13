@@ -1,5 +1,5 @@
 import * as argon2 from "argon2";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import * as jose from "jose";
 import cloneDeep from "clone-deep";
 import { db } from "../../db/index.js";
@@ -8,11 +8,11 @@ import {
   type User,
   type UserWithoutSensitiveFields,
 } from "../../db/tables/users.table.js";
-import { sessionsTable } from "../../db/tables/sessions.table.js";
+import { sessionsTable, type Session } from "../../db/tables/sessions.table.js";
 import { nanoid } from "../../utils/nanoid.js";
 import { ApiResponseCode } from "../../utils/api-response.js";
 import { ApiError } from "../../utils/api-error.js";
-import type { IJwtPayload } from "./user.types.js";
+import type { IJwtPayload, TokenType } from "./user.types.js";
 
 const accessTokenSecret = new TextEncoder().encode(
   process.env.JWT_ACCESS_TOKEN_SECRET
@@ -76,14 +76,15 @@ export async function loginUser(params: {
   }
 
   // Generate JWT token pair
-  const tokenPair = await generateTokenPair(user);
+  const tokenFamily = nanoid();
+  const tokenPair = await generateTokenPair({ user, tokenFamily });
 
   // Create a session in the database
   await db
     .insert(sessionsTable)
     .values({
       userId: user.id,
-      tokenFamily: tokenPair.tokenFamily,
+      tokenFamily,
       refreshToken: await argon2.hash(tokenPair.refreshToken),
     })
     .execute();
@@ -92,15 +93,92 @@ export async function loginUser(params: {
 }
 
 /**
- * Generate JWT token pair
+ * Login a user
  */
-async function generateTokenPair(user: User): Promise<{
+export async function refreshTokens(params: {
+  user: UserWithoutSensitiveFields;
+  session: Pick<Session, "tokenFamily"> & {
+    refreshToken: string;
+  };
+}): Promise<{
   accessToken: string;
   refreshToken: string;
-  tokenFamily: string;
 }> {
+  const {
+    user,
+    session: { refreshToken, tokenFamily },
+  } = params;
+
+  // Get session from database
+  const session = await db
+    .select({
+      id: sessionsTable.id,
+      refreshToken: sessionsTable.refreshToken,
+    })
+    .from(sessionsTable)
+    .where(
+      and(
+        eq(sessionsTable.userId, user.id),
+        eq(sessionsTable.tokenFamily, tokenFamily)
+      )
+    )
+    .execute()
+    .then((rows) => rows[0]);
+
+  if (!session) {
+    // User was logged out of this session
+    throw new ApiError(
+      ApiResponseCode.unauthorized,
+      "Invalid refresh token",
+      401
+    );
+  }
+
+  // Verify refresh token
+  if (!(await argon2.verify(session.refreshToken, refreshToken))) {
+    // The refresh token was compromised. Logout the user from this session
+    await db
+      .delete(sessionsTable)
+      .where(eq(sessionsTable.id, session.id))
+      .execute();
+    throw new ApiError(
+      ApiResponseCode.unauthorized,
+      "Invalid refresh token",
+      401
+    );
+  }
+
+  // Generate JWT token pair
+  const tokenPair = await generateTokenPair({ user, tokenFamily });
+
+  // Update the session in the database
+  await db
+    .update(sessionsTable)
+    .set({
+      refreshToken: await argon2.hash(tokenPair.refreshToken),
+    })
+    .where(eq(sessionsTable.id, session.id))
+    .execute();
+
+  return {
+    accessToken: tokenPair.accessToken,
+    refreshToken: tokenPair.refreshToken,
+  };
+}
+
+/**
+ * Generate JWT token pair
+ */
+async function generateTokenPair(params: {
+  user: Pick<User, "id" | "email">;
+  tokenFamily: string;
+}): Promise<{
+  accessToken: string;
+  refreshToken: string;
+}> {
+  const { user, tokenFamily } = params;
+
   const alg = "HS256";
-  const tokenFamily = nanoid();
   const payload: IJwtPayload = {
     sub: user.id.toString(),
     email: user.email,
@@ -120,16 +198,16 @@ async function generateTokenPair(user: User): Promise<{
       .sign(refreshTokenSecret),
   ]);
 
-  return { accessToken, refreshToken, tokenFamily };
+  return { accessToken, refreshToken };
 }
 
 /**
  * Verify JWT (access / refresh token)
  */
 export async function verifyJwt(
-  type: "access_token" | "refresh_token",
+  type: TokenType,
   token: string
-): Promise<UserWithoutSensitiveFields> {
+): Promise<{ user: UserWithoutSensitiveFields; jwtPayload: IJwtPayload }> {
   const { payload } = await jose.jwtVerify<IJwtPayload>(
     token,
     type === "access_token" ? accessTokenSecret : refreshTokenSecret,
@@ -153,7 +231,7 @@ export async function verifyJwt(
     );
   }
 
-  return omitSensitiveUserFields(user);
+  return { user: omitSensitiveUserFields(user), jwtPayload: payload };
 }
 
 /**

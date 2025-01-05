@@ -5,3 +5,5 @@ export interface IJwtPayload extends JWTPayload {
   email: string;
   token_family: string;
 }
+
+export type TokenType = "access_token" | "refresh_token";

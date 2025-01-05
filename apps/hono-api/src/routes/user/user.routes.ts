@@ -4,7 +4,7 @@ import { auth } from "../../middlewares/auth.middleware.js";
 import type { HonoAppEnv } from "../../app.js";
 import { ApiResponse, ApiResponseCode } from "../../utils/api-response.js";
 import { loginUserSchema, signupUserSchema } from "./user.schema.js";
-import { loginUser, signupUser } from "./user.service.js";
+import { loginUser, refreshTokens, signupUser } from "./user.service.js";
 
 export const users = new Hono<HonoAppEnv>()
   .basePath("/users")
@@ -44,6 +44,23 @@ export const users = new Hono<HonoAppEnv>()
         message: "User logged in successfully",
         data: {
           user,
+          accessToken,
+          refreshToken,
+        },
+      })
+    );
+  })
+  .post("/refresh-tokens", auth("refresh_token"), async (ctx) => {
+    const { accessToken, refreshToken } = await refreshTokens({
+      user: ctx.get("user"),
+      session: ctx.get("session"),
+    });
+
+    return ctx.json(
+      new ApiResponse({
+        response_code: ApiResponseCode.ok,
+        message: "Tokens refreshed successfully",
+        data: {
           accessToken,
           refreshToken,
         },
