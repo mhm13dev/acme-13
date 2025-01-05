@@ -122,7 +122,7 @@ async function generateTokenPair(user: User): Promise<{
     new jose.SignJWT(payload)
       .setProtectedHeader({ alg })
       .setIssuedAt()
-      .setExpirationTime("2h")
+      .setExpirationTime("15m")
       .sign(accessTokenSecret),
     new jose.SignJWT(payload)
       .setProtectedHeader({ alg })
