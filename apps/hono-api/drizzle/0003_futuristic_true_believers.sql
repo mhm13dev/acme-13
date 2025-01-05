@@ -1,0 +1,2 @@
+CREATE INDEX "sessions_user_id_token_family_index" ON "sessions" USING btree ("user_id","token_family");--> statement-breakpoint
+ALTER TABLE "sessions" ADD CONSTRAINT "sessions_tokenFamily_unique" UNIQUE("token_family");
