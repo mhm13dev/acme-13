@@ -52,7 +52,7 @@ export const users = new Hono<HonoAppEnv>()
   })
   .post("/refresh-tokens", auth("refresh_token"), async (ctx) => {
     const { accessToken, refreshToken } = await refreshTokens({
-      user: ctx.get("user"),
+      user: await ctx.get("user").load(),
       session: ctx.get("session"),
     });
 
@@ -76,7 +76,7 @@ export const users = new Hono<HonoAppEnv>()
         response_code: ApiResponseCode.ok,
         message: "Current user",
         data: {
-          user: ctx.get("user"),
+          user: await ctx.get("user").load(),
         },
       })
     );

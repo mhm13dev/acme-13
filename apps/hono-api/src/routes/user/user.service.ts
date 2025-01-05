@@ -207,7 +207,10 @@ async function generateTokenPair(params: {
 export async function verifyJwt(
   type: TokenType,
   token: string
-): Promise<{ user: UserWithoutSensitiveFields; jwtPayload: IJwtPayload }> {
+): Promise<{
+  loadUser: () => Promise<UserWithoutSensitiveFields>;
+  jwtPayload: IJwtPayload;
+}> {
   const { payload } = await jose.jwtVerify<IJwtPayload>(
     token,
     type === "access_token" ? accessTokenSecret : refreshTokenSecret,
@@ -216,22 +219,27 @@ export async function verifyJwt(
     }
   );
 
-  const user = await db
-    .select()
-    .from(usersTable)
-    .where(eq(usersTable.id, parseInt(payload.sub, 10)))
-    .execute()
-    .then((rows) => rows[0]);
+  // Get user from database on demand
+  const loadUser = async () => {
+    const user = await db
+      .select()
+      .from(usersTable)
+      .where(eq(usersTable.id, parseInt(payload.sub, 10)))
+      .execute()
+      .then((rows) => rows[0]);
 
-  if (!user) {
-    throw new ApiError(
-      ApiResponseCode.resource_not_found,
-      "User not found",
-      404
-    );
-  }
+    if (!user) {
+      throw new ApiError(
+        ApiResponseCode.resource_not_found,
+        "User not found",
+        404
+      );
+    }
 
-  return { user: omitSensitiveUserFields(user), jwtPayload: payload };
+    return omitSensitiveUserFields(user);
+  };
+
+  return { loadUser, jwtPayload: payload };
 }
 
 /**

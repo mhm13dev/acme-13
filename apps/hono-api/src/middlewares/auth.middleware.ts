@@ -10,7 +10,11 @@ import type { HonoAppEnv } from "../app.js";
 
 interface AuthMiddlewareEnv<T extends TokenType> extends HonoAppEnv {
   Variables: HonoAppEnv["Variables"] & {
-    user: UserWithoutSensitiveFields;
+    /**
+     * Current User.
+     * - `User` is retrieved from the database on demand by calling `.load()` method
+     */
+    user: { load: () => Promise<UserWithoutSensitiveFields> };
     session: Pick<Session, "tokenFamily"> &
       (T extends "access_token"
         ? {
@@ -50,10 +54,10 @@ export const auth = <T extends TokenType>(tokenType: T) =>
       }
 
       // Verify the access token
-      const { user, jwtPayload } = await verifyJwt(tokenType, token);
+      const { loadUser, jwtPayload } = await verifyJwt(tokenType, token);
 
-      // Set `user` in the context
-      ctx.set("user", user);
+      // Set `user` promise in the context
+      ctx.set("user", { load: loadUser });
 
       // Set `session` in the context
       const baseSession = {
