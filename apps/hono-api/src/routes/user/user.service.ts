@@ -40,12 +40,7 @@ export async function signupUser(params: {
       email,
       password: hashedPassword,
     })
-    .returning({
-      id: usersTable.id,
-      email: usersTable.email,
-      created_at: usersTable.created_at,
-      updated_at: usersTable.updated_at,
-    })
+    .returning()
     .execute();
 
   return omitSensitiveUserFields(user);
@@ -66,13 +61,7 @@ export async function loginUser(params: {
 
   // Get user from database
   const user = await db
-    .select({
-      id: usersTable.id,
-      email: usersTable.email,
-      password: usersTable.password,
-      created_at: usersTable.created_at,
-      updated_at: usersTable.updated_at,
-    })
+    .select()
     .from(usersTable)
     .where(eq(usersTable.email, email))
     .execute()
@@ -150,12 +139,7 @@ export async function verifyJwt(
   );
 
   const user = await db
-    .select({
-      id: usersTable.id,
-      email: usersTable.email,
-      created_at: usersTable.created_at,
-      updated_at: usersTable.updated_at,
-    })
+    .select()
     .from(usersTable)
     .where(eq(usersTable.id, parseInt(payload.sub, 10)))
     .execute()
