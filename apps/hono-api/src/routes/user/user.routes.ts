@@ -47,7 +47,8 @@ export const users = new Hono<HonoAppEnv>()
           accessToken,
           refreshToken,
         },
-      })
+      }),
+      200
     );
   })
   .post("/refresh-tokens", auth("refresh_token"), async (ctx) => {
@@ -64,7 +65,8 @@ export const users = new Hono<HonoAppEnv>()
           accessToken,
           refreshToken,
         },
-      })
+      }),
+      200
     );
   })
   /**
@@ -78,6 +80,7 @@ export const users = new Hono<HonoAppEnv>()
         data: {
           user: await ctx.get("user").load(),
         },
-      })
+      }),
+      200
     );
   });
