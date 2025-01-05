@@ -1,10 +1,12 @@
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
+import { auth } from "../../middlewares/auth.middleware.js";
+import type { HonoAppEnv } from "../../app.js";
 import { ApiResponse, ApiResponseCode } from "../../utils/api-response.js";
 import { loginUserSchema, signupUserSchema } from "./user.schema.js";
 import { loginUser, signupUser } from "./user.service.js";
 
-export const users = new Hono()
+export const users = new Hono<HonoAppEnv>()
   .basePath("/users")
   /**
    * Signup a new user
@@ -44,6 +46,20 @@ export const users = new Hono()
           user,
           accessToken,
           refreshToken,
+        },
+      })
+    );
+  })
+  /**
+   * Get Current User
+   */
+  .get("/me", auth("access_token"), async (ctx) => {
+    return ctx.json(
+      new ApiResponse({
+        response_code: ApiResponseCode.ok,
+        message: "Current user",
+        data: {
+          user: ctx.get("user"),
         },
       })
     );

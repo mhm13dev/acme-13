@@ -14,6 +14,13 @@ import { ApiResponseCode } from "../../utils/api-response.js";
 import { ApiError } from "../../utils/api-error.js";
 import type { IJwtPayload } from "./user.types.js";
 
+const accessTokenSecret = new TextEncoder().encode(
+  process.env.JWT_ACCESS_TOKEN_SECRET
+);
+const refreshTokenSecret = new TextEncoder().encode(
+  process.env.JWT_REFRESH_TOKEN_SECRET
+);
+
 /**
  * Signup a new user
  */
@@ -103,13 +110,6 @@ async function generateTokenPair(user: User): Promise<{
   refreshToken: string;
   tokenFamily: string;
 }> {
-  const accessTokenSecret = new TextEncoder().encode(
-    process.env.JWT_ACCESS_TOKEN_SECRET
-  );
-  const refreshTokenSecret = new TextEncoder().encode(
-    process.env.JWT_REFRESH_TOKEN_SECRET
-  );
-
   const alg = "HS256";
   const tokenFamily = nanoid();
   const payload: IJwtPayload = {
@@ -132,6 +132,44 @@ async function generateTokenPair(user: User): Promise<{
   ]);
 
   return { accessToken, refreshToken, tokenFamily };
+}
+
+/**
+ * Verify JWT (access / refresh token)
+ */
+export async function verifyJwt(
+  type: "access_token" | "refresh_token",
+  token: string
+): Promise<UserWithoutSensitiveFields> {
+  const { payload } = await jose.jwtVerify<IJwtPayload>(
+    token,
+    type === "access_token" ? accessTokenSecret : refreshTokenSecret,
+    {
+      algorithms: ["HS256"],
+    }
+  );
+
+  const user = await db
+    .select({
+      id: usersTable.id,
+      email: usersTable.email,
+      created_at: usersTable.created_at,
+      updated_at: usersTable.updated_at,
+    })
+    .from(usersTable)
+    .where(eq(usersTable.id, parseInt(payload.sub, 10)))
+    .execute()
+    .then((rows) => rows[0]);
+
+  if (!user) {
+    throw new ApiError(
+      ApiResponseCode.resource_not_found,
+      "User not found",
+      404
+    );
+  }
+
+  return omitSensitiveUserFields(user);
 }
 
 /**

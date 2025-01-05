@@ -1,9 +1,16 @@
 import { Hono } from "hono";
+import type { Variables } from "hono/types";
+import type { HttpBindings } from "@hono/node-server";
 import { users } from "./routes/user/user.routes.js";
 import { ApiError } from "./utils/api-error.js";
 import { ApiResponse, ApiResponseCode } from "./utils/api-response.js";
 
-export const app = new Hono()
+export interface HonoAppEnv {
+  Bindings: HttpBindings;
+  Variables: Variables;
+}
+
+export const app = new Hono<HonoAppEnv>()
   .get("/", async (c) => {
     return c.json(
       new ApiResponse({
