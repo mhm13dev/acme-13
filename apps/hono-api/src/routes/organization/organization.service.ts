@@ -1,10 +1,11 @@
-import { eq } from "drizzle-orm";
+import { eq, getTableColumns, inArray, sql } from "drizzle-orm";
 import { db } from "../../db/index.js";
 import type { User } from "../../db/tables/users.table.js";
 import {
   organizationsTable,
   type Organization,
 } from "../../db/tables/organization.table.js";
+import { orgUsersTable } from "../../db/tables/org-users.table.js";
 import { ApiResponseCode } from "../../utils/api-response.js";
 import { ApiError } from "../../utils/api-error.js";
 import { createOrgUser } from "../org-user/org-user.service.js";
@@ -59,4 +60,22 @@ export async function createOrganization(params: {
   });
 
   return organization;
+}
+
+/**
+ * Get Organizations in which the User is a member
+ */
+export async function getOrganizationsForMember(params: {
+  userId: number;
+}): Promise<Organization[]> {
+  const { userId } = params;
+
+  const organizations = await db
+    .select(getTableColumns(organizationsTable))
+    .from(organizationsTable)
+    .leftJoin(orgUsersTable, eq(organizationsTable.id, orgUsersTable.org_id))
+    .where(eq(orgUsersTable.user_id, userId))
+    .execute();
+
+  return organizations;
 }
