@@ -36,6 +36,13 @@
       "when": 1736628274935,
       "tag": "0004_condemned_grim_reaper",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1736639868529,
+      "tag": "0005_orange_wraith",
+      "breakpoints": true
     }
   ]
 }

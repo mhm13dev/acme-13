@@ -1,19 +1,23 @@
 import { relations } from "drizzle-orm";
-import { integer, pgTable } from "drizzle-orm/pg-core";
+import { integer, pgTable, unique } from "drizzle-orm/pg-core";
 import { timestamps } from "../helpers/columns.helpers.js";
 import { organizationsTable } from "./organization.table.js";
 import { usersTable } from "./users.table.js";
 
-export const orgUsersTable = pgTable("org_users", {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  userId: integer()
-    .notNull()
-    .references(() => usersTable.id, { onDelete: "cascade" }),
-  orgId: integer()
-    .notNull()
-    .references(() => organizationsTable.id, { onDelete: "cascade" }),
-  ...timestamps,
-});
+export const orgUsersTable = pgTable(
+  "org_users",
+  {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    userId: integer()
+      .notNull()
+      .references(() => usersTable.id, { onDelete: "cascade" }),
+    orgId: integer()
+      .notNull()
+      .references(() => organizationsTable.id, { onDelete: "cascade" }),
+    ...timestamps,
+  },
+  (table) => [unique().on(table.userId, table.orgId)]
+);
 
 export type OrgUser = typeof orgUsersTable.$inferSelect;
 
