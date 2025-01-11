@@ -2,8 +2,10 @@ import { Hono } from "hono";
 import type { Variables } from "hono/types";
 import type { HttpBindings } from "@hono/node-server";
 import { users } from "./routes/user/user.routes.js";
+import { organizations } from "./routes/organization/organization.routes.js";
 import { ApiError } from "./utils/api-error.js";
 import { ApiResponse, ApiResponseCode } from "./utils/api-response.js";
+import { env } from "./config/env.js";
 
 export interface HonoAppEnv {
   Bindings: HttpBindings;
@@ -24,6 +26,7 @@ export const app = new Hono<HonoAppEnv>()
     );
   })
   .route("/", users)
+  .route("/", organizations)
   .notFound((c) => {
     return c.json(
       new ApiResponse({
@@ -51,7 +54,10 @@ export const app = new Hono<HonoAppEnv>()
     return c.json(
       new ApiResponse({
         response_code: ApiResponseCode.internal_server_error,
-        message: error.message ?? "Internal server error",
+        message:
+          env.APP_ENV === "production"
+            ? "Internal server error"
+            : error.message ?? "Internal server error",
       }),
       500
     );

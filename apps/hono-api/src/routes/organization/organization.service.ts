@@ -1,0 +1,62 @@
+import { eq } from "drizzle-orm";
+import { db } from "../../db/index.js";
+import type { User } from "../../db/tables/users.table.js";
+import {
+  organizationsTable,
+  type Organization,
+} from "../../db/tables/organization.table.js";
+import { ApiResponseCode } from "../../utils/api-response.js";
+import { ApiError } from "../../utils/api-error.js";
+import { createOrgUser } from "../org-user/org-user.service.js";
+
+/**
+ * Create a new Organization
+ */
+export async function createOrganization(params: {
+  name: string;
+  slug: string;
+  owner: Pick<User, "id">;
+}): Promise<Organization> {
+  const { name, slug, owner } = params;
+
+  // Start a transaction
+  const organization = await db.transaction(async (tx) => {
+    // Check if organization with the same slug already exists
+    const existingOrganization = await db.query.organizationsTable
+      .findFirst({
+        where: (table) => eq(table.slug, slug),
+        columns: { id: true, slug: true },
+      })
+      .execute();
+
+    if (existingOrganization) {
+      throw new ApiError(
+        ApiResponseCode.conflict,
+        "Organization with the same slug already exists",
+        409
+      );
+    }
+
+    // Insert organization into database
+    const [organization] = await tx
+      .insert(organizationsTable)
+      .values({
+        name,
+        slug,
+        owner_id: owner.id,
+      })
+      .returning()
+      .execute();
+
+    // Create an OrgUser record for the owner
+    await createOrgUser({
+      user: owner,
+      organization,
+      tx,
+    });
+
+    return organization;
+  });
+
+  return organization;
+}

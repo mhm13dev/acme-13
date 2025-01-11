@@ -15,7 +15,7 @@ interface AuthMiddlewareEnv<T extends TokenType> extends HonoAppEnv {
      * - `User` is retrieved from the database on demand by calling `.load()` method
      */
     user: { load: () => Promise<UserWithoutSensitiveFields> };
-    session: Pick<Session, "tokenFamily"> &
+    session: Pick<Session, "tokenFamily" | "userId"> &
       (T extends "access_token"
         ? {
             accessToken: string;
@@ -62,7 +62,8 @@ export const auth = <T extends TokenType>(tokenType: T) =>
       // Set `session` in the context
       const baseSession = {
         tokenFamily: jwtPayload.token_family,
-      } satisfies Pick<Session, "tokenFamily">;
+        userId: Number(jwtPayload.sub),
+      } satisfies Pick<Session, "tokenFamily" | "userId">;
 
       switch (tokenType) {
         case "access_token":
