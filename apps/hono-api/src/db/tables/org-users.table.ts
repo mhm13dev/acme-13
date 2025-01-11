@@ -6,10 +6,10 @@ import { usersTable } from "./users.table.js";
 
 export const orgUsersTable = pgTable("org_users", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  user_id: integer()
+  userId: integer()
     .notNull()
     .references(() => usersTable.id, { onDelete: "cascade" }),
-  org_id: integer()
+  orgId: integer()
     .notNull()
     .references(() => organizationsTable.id, { onDelete: "cascade" }),
   ...timestamps,
@@ -19,11 +19,11 @@ export type OrgUser = typeof orgUsersTable.$inferSelect;
 
 export const orgUsersRelations = relations(orgUsersTable, ({ one }) => ({
   user: one(usersTable, {
-    fields: [orgUsersTable.user_id],
+    fields: [orgUsersTable.userId],
     references: [usersTable.id],
   }),
   organization: one(organizationsTable, {
-    fields: [orgUsersTable.org_id],
+    fields: [orgUsersTable.orgId],
     references: [organizationsTable.id],
   }),
 }));

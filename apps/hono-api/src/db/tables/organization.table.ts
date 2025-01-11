@@ -8,7 +8,7 @@ export const organizationsTable = pgTable("organizations", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   slug: varchar({ length: 255 }).notNull().unique(),
   name: varchar({ length: 255 }).notNull(),
-  owner_id: integer()
+  ownerId: integer()
     .notNull()
     .references(() => usersTable.id, { onDelete: "cascade" }),
   ...timestamps,
@@ -20,7 +20,7 @@ export const organizationsRelations = relations(
   organizationsTable,
   ({ one, many }) => ({
     owner: one(usersTable, {
-      fields: [organizationsTable.owner_id],
+      fields: [organizationsTable.ownerId],
       references: [usersTable.id],
     }),
     orgUsers: many(orgUsersTable),

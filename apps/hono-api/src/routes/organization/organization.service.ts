@@ -44,7 +44,7 @@ export async function createOrganization(params: {
       .values({
         name,
         slug,
-        owner_id: owner.id,
+        ownerId: owner.id,
       })
       .returning()
       .execute();
@@ -73,8 +73,8 @@ export async function getOrganizationsForMember(params: {
   const organizations = await db
     .select(getTableColumns(organizationsTable))
     .from(organizationsTable)
-    .leftJoin(orgUsersTable, eq(organizationsTable.id, orgUsersTable.org_id))
-    .where(eq(orgUsersTable.user_id, userId))
+    .leftJoin(orgUsersTable, eq(organizationsTable.id, orgUsersTable.orgId))
+    .where(eq(orgUsersTable.userId, userId))
     .execute();
 
   return organizations;

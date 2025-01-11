@@ -26,8 +26,8 @@ export async function createOrgUser(params: {
   const [orgUser] = await (tx ?? db)
     .insert(orgUsersTable)
     .values({
-      user_id: user.id,
-      org_id: organization.id,
+      userId: user.id,
+      orgId: organization.id,
     })
     .returning()
     .execute();
