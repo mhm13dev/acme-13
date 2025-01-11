@@ -200,6 +200,29 @@ async function generateTokenPair(params: {
 }
 
 /**
+ * Load user function for `auth` middleware
+ */
+export async function loadUser(
+  userId: number
+): Promise<UserWithoutSensitiveFields> {
+  const [user] = await db
+    .select()
+    .from(usersTable)
+    .where(eq(usersTable.id, userId))
+    .execute();
+
+  if (!user) {
+    throw new ApiError(
+      ApiResponseCode.resource_not_found,
+      "User not found",
+      404
+    );
+  }
+
+  return omitSensitiveUserFields(user);
+}
+
+/**
  * Verify JWT (access / refresh token)
  */
 export async function verifyJwt(
@@ -217,27 +240,11 @@ export async function verifyJwt(
     }
   );
 
-  // Get user from database on demand
-  const loadUser = async () => {
-    const user = await db
-      .select()
-      .from(usersTable)
-      .where(eq(usersTable.id, parseInt(payload.sub, 10)))
-      .execute()
-      .then((rows) => rows[0]);
-
-    if (!user) {
-      throw new ApiError(
-        ApiResponseCode.resource_not_found,
-        "User not found",
-        404
-      );
-    }
-
-    return omitSensitiveUserFields(user);
+  return {
+    // Get user from database on demand
+    loadUser: () => loadUser(Number(payload.sub)),
+    jwtPayload: payload,
   };
-
-  return { loadUser, jwtPayload: payload };
 }
 
 /**
