@@ -23,7 +23,7 @@ export async function createOrganization(params: {
   // Start a transaction
   const organization = await db.transaction(async (tx) => {
     // Check if organization with the same slug already exists
-    const existingOrganization = await db.query.organizationsTable
+    const existingOrganization = await tx.query.organizationsTable
       .findFirst({
         where: (table) => eq(table.slug, slug),
         columns: { id: true, slug: true },
