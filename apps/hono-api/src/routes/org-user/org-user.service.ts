@@ -8,25 +8,25 @@ import {
 import type { User } from "../../db/tables/users.table.js";
 import type { Organization } from "../../db/tables/organizations.table.js";
 import {
-  orgUsersTable,
-  type OrgUser,
-} from "../../db/tables/org-users.table.js";
+  orgMembersTable,
+  type OrgMember,
+} from "../../db/tables/org-members.table.js";
 import { ApiError } from "../../utils/api-error.js";
 import { ApiResponseCode } from "../../utils/api-response.js";
 
 /**
- * Create an OrgUser record
+ * Create an OrgMember record
  */
-export async function createOrgUser(params: {
+export async function createOrgMember(params: {
   user: Pick<User, "id">;
   organization: Pick<Organization, "id">;
   tx?: PgTransaction<NodePgQueryResultHKT, DbSchema, DbTablesWithRelations>;
-}): Promise<OrgUser> {
+}): Promise<OrgMember> {
   const { user, organization, tx } = params;
 
-  // Insert OrgUser record into database
-  const [orgUser] = await (tx ?? db)
-    .insert(orgUsersTable)
+  // Insert OrgMember record into database
+  const [orgMember] = await (tx ?? db)
+    .insert(orgMembersTable)
     .values({
       userId: user.id,
       orgId: organization.id,
@@ -34,7 +34,7 @@ export async function createOrgUser(params: {
     .returning()
     .execute();
 
-  return orgUser;
+  return orgMember;
 }
 
 /**
@@ -44,11 +44,11 @@ export async function getOrgMember(params: {
   userId: number;
   orgId: number;
   tx?: PgTransaction<NodePgQueryResultHKT, DbSchema, DbTablesWithRelations>;
-}): Promise<OrgUser | undefined> {
+}): Promise<OrgMember | undefined> {
   const { userId, orgId, tx } = params;
 
   // Get OrgMember record from database
-  const orgMember = await (tx ?? db).query.orgUsersTable
+  const orgMember = await (tx ?? db).query.orgMembersTable
     .findFirst({
       where: (table, { and, eq }) =>
         and(eq(table.userId, userId), eq(table.orgId, orgId)),
@@ -60,14 +60,14 @@ export async function getOrgMember(params: {
 
 /**
  * Ensure that the user is a member of the organization
- * @returns The OrgUser record
+ * @returns The OrgMember record
  * @throws If the user is not a member of the organization
  */
 export async function shouldBeOrgMember(params: {
   userId: number;
   orgId: number;
   tx?: PgTransaction<NodePgQueryResultHKT, DbSchema, DbTablesWithRelations>;
-}): Promise<OrgUser> {
+}): Promise<OrgMember> {
   const { userId, orgId, tx } = params;
 
   const orgMember = await getOrgMember({ userId, orgId, tx });

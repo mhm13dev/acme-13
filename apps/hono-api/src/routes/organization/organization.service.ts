@@ -5,10 +5,10 @@ import {
   organizationsTable,
   type Organization,
 } from "../../db/tables/organizations.table.js";
-import { orgUsersTable } from "../../db/tables/org-users.table.js";
+import { orgMembersTable } from "../../db/tables/org-members.table.js";
 import { ApiResponseCode } from "../../utils/api-response.js";
 import { ApiError } from "../../utils/api-error.js";
-import { createOrgUser } from "../org-user/org-user.service.js";
+import { createOrgMember } from "../org-user/org-user.service.js";
 
 /**
  * Create a new Organization
@@ -49,8 +49,8 @@ export async function createOrganization(params: {
       .returning()
       .execute();
 
-    // Create an OrgUser record for the owner
-    await createOrgUser({
+    // Create an OrgMember record for the owner
+    await createOrgMember({
       user: owner,
       organization,
       tx,
@@ -73,8 +73,8 @@ export async function getOrganizationsForMember(params: {
   const organizations = await db
     .select(getTableColumns(organizationsTable))
     .from(organizationsTable)
-    .leftJoin(orgUsersTable, eq(organizationsTable.id, orgUsersTable.orgId))
-    .where(eq(orgUsersTable.userId, userId))
+    .leftJoin(orgMembersTable, eq(organizationsTable.id, orgMembersTable.orgId))
+    .where(eq(orgMembersTable.userId, userId))
     .execute();
 
   return organizations;

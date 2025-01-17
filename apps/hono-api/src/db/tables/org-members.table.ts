@@ -4,8 +4,8 @@ import { timestamps } from "../helpers/columns.helpers.js";
 import { organizationsTable } from "./organizations.table.js";
 import { usersTable } from "./users.table.js";
 
-export const orgUsersTable = pgTable(
-  "org_users",
+export const orgMembersTable = pgTable(
+  "org_members",
   {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     userId: integer()
@@ -19,15 +19,15 @@ export const orgUsersTable = pgTable(
   (table) => [unique().on(table.userId, table.orgId)]
 );
 
-export type OrgUser = typeof orgUsersTable.$inferSelect;
+export type OrgMember = typeof orgMembersTable.$inferSelect;
 
-export const orgUsersRelations = relations(orgUsersTable, ({ one }) => ({
+export const orgMembersRelations = relations(orgMembersTable, ({ one }) => ({
   user: one(usersTable, {
-    fields: [orgUsersTable.userId],
+    fields: [orgMembersTable.userId],
     references: [usersTable.id],
   }),
   organization: one(organizationsTable, {
-    fields: [orgUsersTable.orgId],
+    fields: [orgMembersTable.orgId],
     references: [organizationsTable.id],
   }),
 }));

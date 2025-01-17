@@ -7,7 +7,10 @@ import {
   organizationsRelations,
   organizationsTable,
 } from "./tables/organizations.table.js";
-import { orgUsersRelations, orgUsersTable } from "./tables/org-users.table.js";
+import {
+  orgMembersRelations,
+  orgMembersTable,
+} from "./tables/org-members.table.js";
 import { clientsRelations, clientsTable } from "./tables/clients.table.js";
 import { dbConfig } from "./db.config.js";
 
@@ -18,8 +21,8 @@ const dbSchema = {
   sessionsRelations,
   organizationsTable,
   organizationsRelations,
-  orgUsersTable,
-  orgUsersRelations,
+  orgMembersTable,
+  orgMembersRelations,
   clientsTable,
   clientsRelations,
 };

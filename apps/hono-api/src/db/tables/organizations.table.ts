@@ -2,7 +2,7 @@ import { relations } from "drizzle-orm";
 import { integer, pgTable, varchar } from "drizzle-orm/pg-core";
 import { timestamps } from "../helpers/columns.helpers.js";
 import { usersTable } from "./users.table.js";
-import { orgUsersTable } from "./org-users.table.js";
+import { orgMembersTable } from "./org-members.table.js";
 import { clientsTable } from "./clients.table.js";
 
 export const organizationsTable = pgTable("organizations", {
@@ -24,7 +24,7 @@ export const organizationsRelations = relations(
       fields: [organizationsTable.ownerId],
       references: [usersTable.id],
     }),
-    orgUsers: many(orgUsersTable),
+    orgMembers: many(orgMembersTable),
     clients: many(clientsTable),
   })
 );

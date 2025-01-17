@@ -50,6 +50,13 @@
       "when": 1737148495332,
       "tag": "0006_empty_sleeper",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1737149635117,
+      "tag": "0007_glossy_silver_centurion",
+      "breakpoints": true
     }
   ]
 }
