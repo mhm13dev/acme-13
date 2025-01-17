@@ -4,7 +4,7 @@ import type { User } from "../../db/tables/users.table.js";
 import {
   organizationsTable,
   type Organization,
-} from "../../db/tables/organization.table.js";
+} from "../../db/tables/organizations.table.js";
 import { orgUsersTable } from "../../db/tables/org-users.table.js";
 import { ApiResponseCode } from "../../utils/api-response.js";
 import { ApiError } from "../../utils/api-error.js";

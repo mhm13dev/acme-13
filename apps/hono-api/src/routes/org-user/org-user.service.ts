@@ -6,7 +6,7 @@ import {
   type DbTablesWithRelations,
 } from "../../db/index.js";
 import type { User } from "../../db/tables/users.table.js";
-import type { Organization } from "../../db/tables/organization.table.js";
+import type { Organization } from "../../db/tables/organizations.table.js";
 import {
   orgUsersTable,
   type OrgUser,

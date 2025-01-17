@@ -2,7 +2,7 @@ import { relations } from "drizzle-orm";
 import { integer, pgTable, varchar } from "drizzle-orm/pg-core";
 import { timestamps } from "../helpers/columns.helpers.js";
 import { sessionsTable } from "./sessions.table.js";
-import { organizationsTable } from "./organization.table.js";
+import { organizationsTable } from "./organizations.table.js";
 import { orgUsersTable } from "./org-users.table.js";
 
 export const usersTable = pgTable("users", {

@@ -6,7 +6,7 @@ import { sessionsRelations, sessionsTable } from "./tables/sessions.table.js";
 import {
   organizationsRelations,
   organizationsTable,
-} from "./tables/organization.table.js";
+} from "./tables/organizations.table.js";
 import { orgUsersRelations, orgUsersTable } from "./tables/org-users.table.js";
 import { dbConfig } from "./db.config.js";
 
