@@ -3,7 +3,12 @@ import { zValidator } from "@hono/zod-validator";
 import { auth } from "../../middlewares/auth.middleware.js";
 import type { HonoAppEnv } from "../../app.js";
 import { ApiResponse, ApiResponseCode } from "../../utils/api-response.js";
-import { createOrganizationSchema } from "./organization.schema.js";
+import { getOrganizationClients } from "../client/client.service.js";
+import {
+  createOrganizationSchema,
+  getOrganizationClientsParamsSchema,
+  getOrganizationClientsQuerySchema,
+} from "./organization.schema.js";
 import {
   createOrganization,
   getOrganizationsForMember,
@@ -61,4 +66,35 @@ export const organizations = new Hono<HonoAppEnv>()
         },
       })
     );
-  });
+  })
+  /**
+   * Get Organization's Clients
+   */
+  .get(
+    "/:orgId/clients",
+    auth("access_token"),
+    zValidator("param", getOrganizationClientsParamsSchema),
+    zValidator("query", getOrganizationClientsQuerySchema),
+    async (ctx) => {
+      const { userId } = ctx.get("session");
+      const { orgId } = ctx.req.valid("param");
+      const { limit, offset } = ctx.req.valid("query");
+
+      const clients = await getOrganizationClients({
+        orgId,
+        userId,
+        limit,
+        offset,
+      });
+
+      return ctx.json(
+        new ApiResponse({
+          response_code: ApiResponseCode.ok,
+          message: "Clients fetched successfully",
+          data: {
+            clients,
+          },
+        })
+      );
+    }
+  );

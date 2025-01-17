@@ -36,3 +36,30 @@ export async function createClient(params: {
 
   return client;
 }
+
+/**
+ * Get Clients of an Organization
+ */
+export async function getOrganizationClients(params: {
+  orgId: number;
+  userId: number;
+  limit: number;
+  offset: number;
+}): Promise<Client[]> {
+  const { orgId, userId, limit, offset } = params;
+
+  // User must be a member of the organization
+  await shouldBeOrgMember({
+    userId,
+    orgId,
+  });
+
+  // Get clients
+  const clients = await db.query.clientsTable.findMany({
+    where: (table, { eq }) => eq(table.orgId, orgId),
+    limit,
+    offset,
+  });
+
+  return clients;
+}
