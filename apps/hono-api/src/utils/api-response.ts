@@ -7,6 +7,7 @@ export enum ApiResponseCode {
   refresh_token_required = "refresh_token_required",
   unauthorized = "unauthorized",
   conflict = "conflict",
+  forbidden = "forbidden",
 }
 
 export class ApiResponse {

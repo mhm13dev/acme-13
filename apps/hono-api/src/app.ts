@@ -3,6 +3,7 @@ import type { Variables } from "hono/types";
 import type { HttpBindings } from "@hono/node-server";
 import { users } from "./routes/user/user.routes.js";
 import { organizations } from "./routes/organization/organization.routes.js";
+import { clients } from "./routes/client/client.routes.js";
 import { ApiError } from "./utils/api-error.js";
 import { ApiResponse, ApiResponseCode } from "./utils/api-response.js";
 import { env } from "./config/env.js";
@@ -27,6 +28,7 @@ export const app = new Hono<HonoAppEnv>()
   })
   .route("/", users)
   .route("/", organizations)
+  .route("/", clients)
   .notFound((c) => {
     return c.json(
       new ApiResponse({

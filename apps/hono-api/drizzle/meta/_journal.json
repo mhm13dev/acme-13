@@ -43,6 +43,13 @@
       "when": 1736639868529,
       "tag": "0005_orange_wraith",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1737148495332,
+      "tag": "0006_empty_sleeper",
+      "breakpoints": true
     }
   ]
 }

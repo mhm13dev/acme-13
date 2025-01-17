@@ -3,6 +3,7 @@ import { integer, pgTable, varchar } from "drizzle-orm/pg-core";
 import { timestamps } from "../helpers/columns.helpers.js";
 import { usersTable } from "./users.table.js";
 import { orgUsersTable } from "./org-users.table.js";
+import { clientsTable } from "./clients.table.js";
 
 export const organizationsTable = pgTable("organizations", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -24,5 +25,6 @@ export const organizationsRelations = relations(
       references: [usersTable.id],
     }),
     orgUsers: many(orgUsersTable),
+    clients: many(clientsTable),
   })
 );
