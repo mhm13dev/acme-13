@@ -6,12 +6,16 @@ import {
   authFormDataSchema,
   type AuthFormData,
 } from "@repo/shared-lib/zod-schemas/auth.schema";
+import { SignupUserResponse } from "@/lib/actions/signup-user.action";
+import { LoginUserResponse } from "@/lib/actions/login-user.action";
 import { cn } from "@/utils/cn";
 import { FormType } from "./auth.types";
 
 interface Props {
   formType: FormType;
-  onSubmitAction: (formData: AuthFormData) => void;
+  onSubmitAction: (
+    formData: AuthFormData
+  ) => Promise<SignupUserResponse | LoginUserResponse | void>;
 }
 
 export const AuthForm: React.FC<Props> = ({ formType, onSubmitAction }) => {
@@ -20,13 +24,32 @@ export const AuthForm: React.FC<Props> = ({ formType, onSubmitAction }) => {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<AuthFormData>({
     resolver: zodResolver(authFormDataSchema),
   });
 
-  const onSubmit = (data: AuthFormData) => {
-    console.log(data);
-    onSubmitAction(data);
+  const onSubmit = async (formData: AuthFormData) => {
+    try {
+      const response = await onSubmitAction(formData);
+
+      if (!response) {
+        // Indicates success from server action and redirects to specified page
+        return;
+      }
+
+      // There was an error
+      setError("root", {
+        message: response.message,
+      });
+    } catch (error) {
+      console.error(error);
+      setError("root", {
+        message: `Something went wrong while ${
+          formType === "login" ? "logging in" : "signing up"
+        }. Please try again.`,
+      });
+    }
   };
 
   return (
@@ -76,13 +99,17 @@ export const AuthForm: React.FC<Props> = ({ formType, onSubmitAction }) => {
         />
         <p className="text-red-500 text-sm">{errors.password?.message}</p>
       </div>
-
-      <button
-        disabled={Object.keys(errors).length > 0}
-        className="bg-black text-white py-2 px-4 rounded-md font-medium block w-full focus:outline-none focus:border-none focus:ring-2 focus:ring-black"
-      >
-        {formType === "login" ? "Login" : "Sign up"}
-      </button>
+      <div className="space-y-2">
+        <button
+          disabled={Object.keys(errors).length > 0 && !errors.root}
+          className="bg-black text-white py-2 px-4 rounded-md font-medium block w-full focus:outline-none focus:border-none focus:ring-2 focus:ring-black"
+        >
+          {formType === "login" ? "Login" : "Sign up"}
+        </button>
+        <p className="text-red-500 text-sm text-center">
+          {errors.root?.message}
+        </p>
+      </div>
     </form>
   );
 };
