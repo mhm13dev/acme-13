@@ -1,16 +1,36 @@
+"use client";
 import React, { useId } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  authFormDataSchema,
+  type AuthFormData,
+} from "@repo/shared-lib/zod-schemas/auth.schema";
+import { cn } from "@/utils/cn";
 import { FormType } from "./auth.types";
 
 interface Props {
   formType: FormType;
-  onSubmitAction: (formData: FormData) => void;
+  onSubmitAction: (formData: AuthFormData) => void;
 }
 
 export const AuthForm: React.FC<Props> = ({ formType, onSubmitAction }) => {
   const authFormId = useId();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<AuthFormData>({
+    resolver: zodResolver(authFormDataSchema),
+  });
+
+  const onSubmit = (data: AuthFormData) => {
+    console.log(data);
+    onSubmitAction(data);
+  };
 
   return (
-    <form className="space-y-6" action={onSubmitAction}>
+    <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
       <div className="space-y-2">
         <label
           htmlFor={`email-${authFormId}`}
@@ -20,12 +40,18 @@ export const AuthForm: React.FC<Props> = ({ formType, onSubmitAction }) => {
         </label>
         <input
           type="email"
-          name="email"
           id={`email-${authFormId}`}
-          className="block rounded-md w-full p-2 border-none focus:outline-none focus:border-none ring-2 ring-slate-200 focus:ring-black"
+          className={cn(
+            "block rounded-md w-full p-2 border-none focus:outline-none focus:border-none ring-2",
+            errors.email
+              ? "ring-red-500 focus:ring-red-500"
+              : "ring-slate-200 focus:ring-black"
+          )}
           placeholder="johndoe@example.com"
           required
+          {...register("email")}
         />
+        <p className="text-red-500 text-sm">{errors.email?.message}</p>
       </div>
 
       <div className="space-y-2">
@@ -37,15 +63,24 @@ export const AuthForm: React.FC<Props> = ({ formType, onSubmitAction }) => {
         </label>
         <input
           type="password"
-          name="password"
           id={`password-${authFormId}`}
-          className="block rounded-md w-full p-2 border-none focus:outline-none focus:border-none ring-2 ring-slate-200 focus:ring-black"
+          className={cn(
+            "block rounded-md w-full p-2 border-none focus:outline-none focus:border-none ring-2",
+            errors.password
+              ? "ring-red-500 focus:ring-red-500"
+              : "ring-slate-200 focus:ring-black"
+          )}
           placeholder="********"
           required
+          {...register("password")}
         />
+        <p className="text-red-500 text-sm">{errors.password?.message}</p>
       </div>
 
-      <button className="bg-black text-white py-2 px-4 rounded-md font-medium block w-full focus:outline-none focus:border-none focus:ring-2 focus:ring-black">
+      <button
+        disabled={Object.keys(errors).length > 0}
+        className="bg-black text-white py-2 px-4 rounded-md font-medium block w-full focus:outline-none focus:border-none focus:ring-2 focus:ring-black"
+      >
         {formType === "login" ? "Login" : "Sign up"}
       </button>
     </form>

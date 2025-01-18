@@ -1,9 +1,9 @@
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
+import { authFormDataSchema } from "@repo/shared-lib/zod-schemas/auth.schema";
 import { auth } from "../../middlewares/auth.middleware.js";
 import type { HonoAppEnv } from "../../app.js";
 import { ApiResponse, ApiResponseCode } from "../../utils/api-response.js";
-import { loginUserSchema, signupUserSchema } from "./user.schema.js";
 import { loginUser, refreshTokens, signupUser } from "./user.service.js";
 
 export const users = new Hono<HonoAppEnv>()
@@ -11,7 +11,7 @@ export const users = new Hono<HonoAppEnv>()
   /**
    * Signup a new user
    */
-  .post("/signup", zValidator("json", signupUserSchema), async (ctx) => {
+  .post("/signup", zValidator("json", authFormDataSchema), async (ctx) => {
     const { email, password } = ctx.req.valid("json");
 
     const user = await signupUser({ email, password });
@@ -30,7 +30,7 @@ export const users = new Hono<HonoAppEnv>()
   /**
    * Login a user
    */
-  .post("/login", zValidator("json", loginUserSchema), async (ctx) => {
+  .post("/login", zValidator("json", authFormDataSchema), async (ctx) => {
     const { email, password } = ctx.req.valid("json");
 
     const { user, accessToken, refreshToken } = await loginUser({

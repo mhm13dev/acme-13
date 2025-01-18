@@ -1,4 +1,5 @@
 import React from "react";
+import { type AuthFormData } from "@repo/shared-lib/zod-schemas/auth.schema";
 import { AuthHeading } from "../_components/auth-heading";
 import { AuthForm } from "../_components/auth-form";
 import { AuthFooter } from "../_components/auth-footer";
@@ -10,7 +11,7 @@ export default function LoginPage() {
 
       <AuthForm
         formType="login"
-        onSubmitAction={async (formData: FormData) => {
+        onSubmitAction={async (formData: AuthFormData) => {
           "use server";
           console.log({
             tag: "Login form submitted",
