@@ -28,6 +28,17 @@ export async function signupUser(params: {
 }): Promise<UserWithoutSensitiveFields> {
   const { email, password } = params;
 
+  // Check if user already exists
+  const [existingUser] = await db
+    .select({ id: usersTable.id })
+    .from(usersTable)
+    .where(eq(usersTable.email, email))
+    .execute();
+
+  if (existingUser) {
+    throw new ApiError(ApiResponseCode.conflict, "User already exists!", 409);
+  }
+
   // Hash password
   const hashedPassword = await argon2.hash(password);
 
