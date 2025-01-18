@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { idSchema } from "../../common/common.schema.js";
 
 export const createOrganizationSchema = z.object({
   name: z.string().trim().min(1),
@@ -6,10 +7,5 @@ export const createOrganizationSchema = z.object({
 });
 
 export const getOrganizationClientsParamsSchema = z.object({
-  orgId: z.coerce.number().int().positive(),
-});
-
-export const getOrganizationClientsQuerySchema = z.object({
-  limit: z.coerce.number().int().positive().default(50),
-  offset: z.coerce.number().int().nonnegative().default(0),
+  orgId: idSchema,
 });

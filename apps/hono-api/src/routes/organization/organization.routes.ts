@@ -3,11 +3,11 @@ import { zValidator } from "@hono/zod-validator";
 import { auth } from "../../middlewares/auth.middleware.js";
 import type { HonoAppEnv } from "../../app.js";
 import { ApiResponse, ApiResponseCode } from "../../utils/api-response.js";
+import { paginationSchema } from "../../common/common.schema.js";
 import { getOrganizationClients } from "../client/client.service.js";
 import {
   createOrganizationSchema,
   getOrganizationClientsParamsSchema,
-  getOrganizationClientsQuerySchema,
 } from "./organization.schema.js";
 import {
   createOrganization,
@@ -74,7 +74,7 @@ export const organizations = new Hono<HonoAppEnv>()
     "/:orgId/clients",
     auth("access_token"),
     zValidator("param", getOrganizationClientsParamsSchema),
-    zValidator("query", getOrganizationClientsQuerySchema),
+    zValidator("query", paginationSchema),
     async (ctx) => {
       const { userId } = ctx.get("session");
       const { orgId } = ctx.req.valid("param");
