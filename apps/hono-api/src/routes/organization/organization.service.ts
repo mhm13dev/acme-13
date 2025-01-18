@@ -8,7 +8,7 @@ import {
 import { orgMembersTable } from "../../db/tables/org-members.table.js";
 import { ApiResponseCode } from "../../utils/api-response.js";
 import { ApiError } from "../../utils/api-error.js";
-import { createOrgMember } from "../org-user/org-user.service.js";
+import { createOrgMember } from "../org-member/org-member.service.js";
 
 /**
  * Create a new Organization

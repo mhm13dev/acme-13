@@ -1,5 +1,5 @@
 import { db } from "../../db/index.js";
-import { shouldBeOrgMember } from "../org-user/org-user.service.js";
+import { shouldBeOrgMember } from "../org-member/org-member.service.js";
 import { clientsTable, type Client } from "../../db/tables/clients.table.js";
 
 /**
