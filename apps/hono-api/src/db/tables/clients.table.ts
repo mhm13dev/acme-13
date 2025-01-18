@@ -2,6 +2,7 @@ import { relations } from "drizzle-orm";
 import { integer, pgTable, varchar } from "drizzle-orm/pg-core";
 import { timestamps } from "../helpers/columns.helpers.js";
 import { organizationsTable } from "./organizations.table.js";
+import { locationsTable } from "./locations.table.js";
 
 export const clientsTable = pgTable("clients", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -14,9 +15,10 @@ export const clientsTable = pgTable("clients", {
 
 export type Client = typeof clientsTable.$inferSelect;
 
-export const clientsRelations = relations(clientsTable, ({ one }) => ({
+export const clientsRelations = relations(clientsTable, ({ one, many }) => ({
   organization: one(organizationsTable, {
     fields: [clientsTable.orgId],
     references: [organizationsTable.id],
   }),
+  locations: many(locationsTable),
 }));

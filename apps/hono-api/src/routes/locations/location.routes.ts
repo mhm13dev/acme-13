@@ -5,28 +5,29 @@ import type { HonoAppEnv } from "../../app.js";
 import { ApiResponse, ApiResponseCode } from "../../utils/api-response.js";
 import { paginationSchema } from "../../common/common.schema.js";
 import {
-  clientsBaseParamsSchema,
-  createClientSchema,
-} from "./client.schema.js";
-import { createClient, getOrganizationClients } from "./client.service.js";
+  locationsBaseParamsSchema,
+  createLocationSchema,
+} from "./location.schema.js";
+import { createLocation, getClientLocations } from "./location.service.js";
 
-export const clients = new Hono<HonoAppEnv>()
-  .basePath("/organizations/:orgId/clients")
+export const locations = new Hono<HonoAppEnv>()
+  .basePath("/organizations/:orgId/clients/:clientId/locations")
   .use(auth("access_token"))
   /**
-   * Create a new Client
+   * Create a new Location
    */
   .post(
     "/",
-    zValidator("param", clientsBaseParamsSchema),
-    zValidator("json", createClientSchema),
+    zValidator("param", locationsBaseParamsSchema),
+    zValidator("json", createLocationSchema),
     async (ctx) => {
       const { userId } = ctx.get("session");
-      const { orgId } = ctx.req.valid("param");
+      const { orgId, clientId } = ctx.req.valid("param");
       const { name } = ctx.req.valid("json");
 
-      const client = await createClient({
+      const location = await createLocation({
         name,
+        clientId,
         orgId,
         userId,
       });
@@ -34,9 +35,9 @@ export const clients = new Hono<HonoAppEnv>()
       return ctx.json(
         new ApiResponse({
           response_code: ApiResponseCode.ok,
-          message: "Client created successfully",
+          message: "Location created successfully",
           data: {
-            client,
+            location,
           },
         }),
         201
@@ -44,18 +45,19 @@ export const clients = new Hono<HonoAppEnv>()
     }
   )
   /**
-   * Get Organization's Clients
+   * Get Client's Locations
    */
   .get(
     "/",
-    zValidator("param", clientsBaseParamsSchema),
+    zValidator("param", locationsBaseParamsSchema),
     zValidator("query", paginationSchema),
     async (ctx) => {
       const { userId } = ctx.get("session");
-      const { orgId } = ctx.req.valid("param");
+      const { orgId, clientId } = ctx.req.valid("param");
       const { limit, offset } = ctx.req.valid("query");
 
-      const clients = await getOrganizationClients({
+      const locations = await getClientLocations({
+        clientId,
         orgId,
         userId,
         limit,
@@ -65,9 +67,9 @@ export const clients = new Hono<HonoAppEnv>()
       return ctx.json(
         new ApiResponse({
           response_code: ApiResponseCode.ok,
-          message: "Clients fetched successfully",
+          message: "Locations fetched successfully",
           data: {
-            clients,
+            locations,
           },
         })
       );

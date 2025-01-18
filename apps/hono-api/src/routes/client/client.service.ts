@@ -1,6 +1,14 @@
-import { db } from "../../db/index.js";
-import { shouldBeOrgMember } from "../org-member/org-member.service.js";
+import type { PgTransaction } from "drizzle-orm/pg-core";
+import type { NodePgQueryResultHKT } from "drizzle-orm/node-postgres";
+import {
+  db,
+  type DbSchema,
+  type DbTablesWithRelations,
+} from "../../db/index.js";
 import { clientsTable, type Client } from "../../db/tables/clients.table.js";
+import { ApiError } from "../../utils/api-error.js";
+import { ApiResponseCode } from "../../utils/api-response.js";
+import { mustBeOrgMember } from "../org-member/org-member.service.js";
 
 /**
  * Create a new Client
@@ -15,7 +23,7 @@ export async function createClient(params: {
   // Start a transaction
   const client = await db.transaction(async (tx) => {
     // User must be a member of the organization
-    await shouldBeOrgMember({
+    await mustBeOrgMember({
       userId,
       orgId,
       tx,
@@ -49,7 +57,7 @@ export async function getOrganizationClients(params: {
   const { orgId, userId, limit, offset } = params;
 
   // User must be a member of the organization
-  await shouldBeOrgMember({
+  await mustBeOrgMember({
     userId,
     orgId,
   });
@@ -62,4 +70,47 @@ export async function getOrganizationClients(params: {
   });
 
   return clients;
+}
+
+/**
+ * Find a Client
+ */
+export async function findClient(params: {
+  id: number;
+  orgId: number;
+  tx?: PgTransaction<NodePgQueryResultHKT, DbSchema, DbTablesWithRelations>;
+}): Promise<Client | undefined> {
+  const { id, orgId, tx } = params;
+
+  // Find Client record from database
+  const client = await (tx ?? db).query.clientsTable.findFirst({
+    where: (table, { and, eq }) =>
+      and(eq(table.id, id), eq(table.orgId, orgId)),
+  });
+
+  return client;
+}
+
+/**
+ * Ensure that the client exists
+ * @throws If the client does not exist
+ */
+export async function clientMustExist(params: {
+  clientId: number;
+  orgId: number;
+  tx?: PgTransaction<NodePgQueryResultHKT, DbSchema, DbTablesWithRelations>;
+}): Promise<Client> {
+  const { clientId, orgId, tx } = params;
+
+  const client = await findClient({ id: clientId, orgId, tx });
+
+  if (!client) {
+    throw new ApiError(
+      ApiResponseCode.resource_not_found,
+      "Client not found",
+      404
+    );
+  }
+
+  return client;
 }

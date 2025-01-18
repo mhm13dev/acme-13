@@ -12,6 +12,10 @@ import {
   orgMembersTable,
 } from "./tables/org-members.table.js";
 import { clientsRelations, clientsTable } from "./tables/clients.table.js";
+import {
+  locationsRelations,
+  locationsTable,
+} from "./tables/locations.table.js";
 import { dbConfig } from "./db.config.js";
 
 const dbSchema = {
@@ -25,6 +29,8 @@ const dbSchema = {
   orgMembersRelations,
   clientsTable,
   clientsRelations,
+  locationsTable,
+  locationsRelations,
 };
 
 export type DbSchema = typeof dbSchema;

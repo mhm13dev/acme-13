@@ -38,16 +38,16 @@ export async function createOrgMember(params: {
 }
 
 /**
- * Get an OrgMember
+ * Find an OrgMember
  */
-export async function getOrgMember(params: {
+export async function findOrgMember(params: {
   userId: number;
   orgId: number;
   tx?: PgTransaction<NodePgQueryResultHKT, DbSchema, DbTablesWithRelations>;
 }): Promise<OrgMember | undefined> {
   const { userId, orgId, tx } = params;
 
-  // Get OrgMember record from database
+  // Find OrgMember record from database
   const orgMember = await (tx ?? db).query.orgMembersTable
     .findFirst({
       where: (table, { and, eq }) =>
@@ -63,14 +63,14 @@ export async function getOrgMember(params: {
  * @returns The OrgMember record
  * @throws If the user is not a member of the organization
  */
-export async function shouldBeOrgMember(params: {
+export async function mustBeOrgMember(params: {
   userId: number;
   orgId: number;
   tx?: PgTransaction<NodePgQueryResultHKT, DbSchema, DbTablesWithRelations>;
 }): Promise<OrgMember> {
   const { userId, orgId, tx } = params;
 
-  const orgMember = await getOrgMember({ userId, orgId, tx });
+  const orgMember = await findOrgMember({ userId, orgId, tx });
 
   if (!orgMember) {
     throw new ApiError(
