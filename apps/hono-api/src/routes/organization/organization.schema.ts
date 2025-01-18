@@ -6,6 +6,6 @@ export const createOrganizationSchema = z.object({
   slug: z.string().trim().min(1),
 });
 
-export const getOrganizationClientsParamsSchema = z.object({
+export const orgIdParamsSchema = z.object({
   orgId: idSchema,
 });
