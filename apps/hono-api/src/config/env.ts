@@ -14,6 +14,16 @@ const envSchema = z.object({
   // JWT
   ACCESS_TOKEN_SECRET: z.string().trim(),
   REFRESH_TOKEN_SECRET: z.string().trim(),
+  ACCESS_TOKEN_EXPIRY: z
+    .string()
+    .trim()
+    .regex(/\d{1,2}[md]/, "JWT expiry must be in the format of '1d' or '15m'")
+    .default("15m"),
+  REFRESH_TOKEN_EXPIRY: z
+    .string()
+    .trim()
+    .regex(/\d{1,2}[md]/, "JWT expiry must be in the format of '1d' or '15m'")
+    .default("7d"),
 });
 
 export const env = envSchema.parse(process.env);

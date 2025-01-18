@@ -187,12 +187,12 @@ async function generateTokenPair(params: {
     new jose.SignJWT(payload)
       .setProtectedHeader({ alg })
       .setIssuedAt()
-      .setExpirationTime("15m")
+      .setExpirationTime(env.ACCESS_TOKEN_EXPIRY)
       .sign(accessTokenSecret),
     new jose.SignJWT(payload)
       .setProtectedHeader({ alg })
       .setIssuedAt()
-      .setExpirationTime("7d")
+      .setExpirationTime(env.REFRESH_TOKEN_EXPIRY)
       .sign(refreshTokenSecret),
   ]);
 
