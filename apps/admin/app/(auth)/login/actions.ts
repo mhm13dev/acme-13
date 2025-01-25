@@ -7,6 +7,10 @@ import { AuthFormData } from "@repo/shared-lib/zod-schemas";
 import { ApiResponse } from "@repo/shared-lib/api-response";
 import { LoginUserResponse } from "@repo/shared-lib/api-response/users";
 import { env } from "@/config/env";
+import {
+  ACCESS_TOKEN_COOKIE,
+  REFRESH_TOKEN_COOKIE,
+} from "@/lib/auth/constants";
 
 /**
  * Login a user.
@@ -30,14 +34,14 @@ export const loginUser = async (
 
   const cookieStore = await cookies();
 
-  cookieStore.set("accessToken", data.accessToken, {
+  cookieStore.set(ACCESS_TOKEN_COOKIE, data.accessToken, {
     httpOnly: true,
     secure: true,
     path: "/",
     sameSite: "strict",
     expires: new Date(jose.decodeJwt(data.accessToken).exp! * 1000),
   });
-  cookieStore.set("refreshToken", data.refreshToken, {
+  cookieStore.set(REFRESH_TOKEN_COOKIE, data.refreshToken, {
     httpOnly: true,
     secure: true,
     path: "/",
