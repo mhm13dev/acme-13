@@ -10,14 +10,15 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
+    "@repo/shared-lib": "workspace:*",
     "clsx": "^2.1.1",
+    "jose": "^5.9.6",
     "next": "15.1.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
     "tailwind-merge": "^2.6.0",
-    "zod": "^3.24.1",
-    "@repo/shared-lib": "workspace:*"
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
