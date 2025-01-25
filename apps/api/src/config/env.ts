@@ -11,9 +11,12 @@ const envSchema = z.object({
   // DATABASE
   DATABASE_URL: z.string().trim(),
 
-  // JWT
-  ACCESS_TOKEN_SECRET: z.string().trim(),
-  REFRESH_TOKEN_SECRET: z.string().trim(),
+  // AUTH
+  JWT_ALGORITHM: z.enum(["RS256"]).default("RS256"),
+  ACCESS_TOKEN_PRIVATE_KEY_PEM: z.string().trim(),
+  ACCESS_TOKEN_PUBLIC_KEY_PEM: z.string().trim(),
+  REFRESH_TOKEN_PRIVATE_KEY_PEM: z.string().trim(),
+  REFRESH_TOKEN_PUBLIC_KEY_PEM: z.string().trim(),
   ACCESS_TOKEN_EXPIRY: z
     .string()
     .trim()

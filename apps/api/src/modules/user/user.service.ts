@@ -16,9 +16,23 @@ import { nanoid } from "../../utils/nanoid.js";
 import { ApiError } from "../../utils/api-error.js";
 import type { IJwtPayload, TokenType } from "./user.types.js";
 
-// Convert secrets to `Uint8Array`
-const accessTokenSecret = new TextEncoder().encode(env.ACCESS_TOKEN_SECRET);
-const refreshTokenSecret = new TextEncoder().encode(env.REFRESH_TOKEN_SECRET);
+// Prepare JWT secrets
+const accessTokenPrivateKey = await jose.importPKCS8(
+  env.ACCESS_TOKEN_PRIVATE_KEY_PEM,
+  env.JWT_ALGORITHM
+);
+const accessTokenPublicKey = await jose.importSPKI(
+  env.ACCESS_TOKEN_PUBLIC_KEY_PEM,
+  env.JWT_ALGORITHM
+);
+const refreshTokenPrivateKey = await jose.importPKCS8(
+  env.REFRESH_TOKEN_PRIVATE_KEY_PEM,
+  env.JWT_ALGORITHM
+);
+const refreshTokenPublicKey = await jose.importSPKI(
+  env.REFRESH_TOKEN_PUBLIC_KEY_PEM,
+  env.JWT_ALGORITHM
+);
 
 /**
  * Signup a new user
@@ -188,7 +202,6 @@ async function generateTokenPair(params: {
 }> {
   const { user, tokenFamily } = params;
 
-  const alg = "HS256";
   const payload: IJwtPayload = {
     sub: user.id.toString(),
     email: user.email,
@@ -197,15 +210,15 @@ async function generateTokenPair(params: {
 
   const [accessToken, refreshToken] = await Promise.all([
     new jose.SignJWT(payload)
-      .setProtectedHeader({ alg })
+      .setProtectedHeader({ alg: env.JWT_ALGORITHM })
       .setIssuedAt()
       .setExpirationTime(env.ACCESS_TOKEN_EXPIRY)
-      .sign(accessTokenSecret),
+      .sign(accessTokenPrivateKey),
     new jose.SignJWT(payload)
-      .setProtectedHeader({ alg })
+      .setProtectedHeader({ alg: env.JWT_ALGORITHM })
       .setIssuedAt()
       .setExpirationTime(env.REFRESH_TOKEN_EXPIRY)
-      .sign(refreshTokenSecret),
+      .sign(refreshTokenPrivateKey),
   ]);
 
   return { accessToken, refreshToken };
@@ -246,9 +259,9 @@ export async function verifyJwt(
 }> {
   const { payload } = await jose.jwtVerify<IJwtPayload>(
     token,
-    type === "access_token" ? accessTokenSecret : refreshTokenSecret,
+    type === "access_token" ? accessTokenPublicKey : refreshTokenPublicKey,
     {
-      algorithms: ["HS256"],
+      algorithms: [env.JWT_ALGORITHM],
     }
   );
 
