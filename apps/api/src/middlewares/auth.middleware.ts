@@ -2,8 +2,8 @@ import type { Context } from "hono";
 import { createMiddleware } from "hono/factory";
 import { ApiResponseCode } from "@repo/shared-lib/api-response";
 import type { UserWithoutSensitiveFields, Session } from "@repo/shared-lib/db";
-import { verifyJwt } from "../routes/user/user.service.js";
-import type { TokenType } from "../routes/user/user.types.js";
+import { verifyJwt } from "../modules/user/user.service.js";
+import type { TokenType } from "../modules/user/user.types.js";
 import { ApiError } from "../utils/api-error.js";
 import type { HonoAppEnv } from "../app.js";
 

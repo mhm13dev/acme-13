@@ -2,10 +2,10 @@ import { Hono } from "hono";
 import type { Variables } from "hono/types";
 import type { HttpBindings } from "@hono/node-server";
 import { ApiResponse, ApiResponseCode } from "@repo/shared-lib/api-response";
-import { users } from "./routes/user/user.routes.js";
-import { organizations } from "./routes/organization/organization.routes.js";
-import { clients } from "./routes/client/client.routes.js";
-import { locations } from "./routes/location/location.routes.js";
+import { users } from "./modules/user/user.routes.js";
+import { organizations } from "./modules/organization/organization.routes.js";
+import { clients } from "./modules/client/client.routes.js";
+import { locations } from "./modules/location/location.routes.js";
 import { ApiError } from "./utils/api-error.js";
 import { env } from "./config/env.js";
 
