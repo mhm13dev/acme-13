@@ -1,11 +1,14 @@
 import { defineConfig } from "drizzle-kit";
-import { dbConfig } from "./src/db/db.config.js";
-import { env } from "./src/config/env.js";
+import { env } from "../config/env.js";
+import { dbConfig } from "./db.config.js";
 
+/**
+ * For Drizzle Kit.
+ */
 export default defineConfig({
   ...dbConfig,
   out: "./drizzle",
-  schema: "./src/db/tables/*.table.ts",
+  schema: "../../packages/shared-lib/src/db/tables/*.table.ts",
   dialect: "postgresql",
   dbCredentials: {
     url: env.DATABASE_URL,

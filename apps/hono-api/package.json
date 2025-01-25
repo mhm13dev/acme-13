@@ -1,17 +1,20 @@
 {
-  "name": "hono-api",
+  "name": "@repo/hono-api",
   "type": "module",
   "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
     "dev": "tsx watch src/index.ts",
     "dev:inspect": "tsx watch --inspect src/index.ts",
     "db:drizzle-kit": "NODE_OPTIONS='--import tsx' drizzle-kit",
-    "db:generate": "pnpm run db:drizzle-kit generate --config ./drizzle.config.ts",
-    "db:migrate": "pnpm run db:drizzle-kit migrate --config ./drizzle.config.ts",
-    "db:studio": "pnpm run db:drizzle-kit studio --config ./drizzle.config.ts"
+    "db:generate": "pnpm run db:drizzle-kit generate --config ./src/db/drizzle.config.ts",
+    "db:migrate": "pnpm run db:drizzle-kit migrate --config ./src/db/drizzle.config.ts",
+    "db:studio": "pnpm run db:drizzle-kit studio --config ./src/db/drizzle.config.ts"
   },
   "dependencies": {
     "@hono/node-server": "^1.13.7",
     "@hono/zod-validator": "^0.4.2",
+    "@repo/shared-lib": "workspace:*",
     "argon2": "^0.41.1",
     "clone-deep": "^4.0.1",
     "dotenv": "^16.4.7",
@@ -21,14 +24,14 @@
     "jose": "^5.9.6",
     "nanoid": "^5.0.9",
     "pg": "^8.13.1",
-    "zod": "^3.24.1",
-    "@repo/shared-lib": "workspace:*"
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@types/clone-deep": "^4.0.4",
     "@types/node": "^22.10.2",
     "@types/pg": "^8.11.10",
     "drizzle-kit": "^0.30.2",
-    "tsx": "^4.19.2"
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
   }
 }
