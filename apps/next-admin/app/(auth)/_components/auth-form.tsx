@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   authFormDataSchema,
   type AuthFormData,
-} from "@repo/shared-lib/zod-schemas/auth.schema";
+} from "@repo/shared-lib/zod-schemas";
 import { cn } from "@/utils/cn";
 import { SignupUserResponse } from "../signup/actions";
 import { LoginUserResponse } from "../login/actions";

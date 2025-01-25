@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
-import { authFormDataSchema } from "@repo/shared-lib/zod-schemas/auth.schema";
+import { authFormDataSchema } from "@repo/shared-lib/zod-schemas";
 import { auth } from "../../middlewares/auth.middleware.js";
 import type { HonoAppEnv } from "../../app.js";
 import { ApiResponse, ApiResponseCode } from "../../utils/api-response.js";

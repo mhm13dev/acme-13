@@ -4,13 +4,17 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "scripts": {
+    "dev": "tsc --watch --preserveWatchOutput",
+    "build": "tsc"
+  },
   "dependencies": {
     "zod": "^3.24.1"
   },
+  "devDependencies": {
+    "typescript": "^5"
+  },
   "exports": {
-    "./zod-schemas/auth.schema": {
-      "import": "./src/zod-schemas/auth.schema.ts",
-      "types": "./src/zod-schemas/auth.schema.ts"
-    }
+    "./zod-schemas": "./dist/zod-schemas/index.js"
   }
 }
