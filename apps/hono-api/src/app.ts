@@ -1,12 +1,12 @@
 import { Hono } from "hono";
 import type { Variables } from "hono/types";
 import type { HttpBindings } from "@hono/node-server";
+import { ApiResponse, ApiResponseCode } from "@repo/shared-lib/api-response";
 import { users } from "./routes/user/user.routes.js";
 import { organizations } from "./routes/organization/organization.routes.js";
 import { clients } from "./routes/client/client.routes.js";
 import { locations } from "./routes/location/location.routes.js";
 import { ApiError } from "./utils/api-error.js";
-import { ApiResponse, ApiResponseCode } from "./utils/api-response.js";
 import { env } from "./config/env.js";
 
 export interface HonoAppEnv {

@@ -1,5 +1,5 @@
 import { seed } from "drizzle-seed";
-import { usersTable } from "../tables/users.table.js";
+import { usersTable } from "@repo/shared-lib/db";
 import { db } from "../index.js";
 
 /**

@@ -1,5 +1,5 @@
 import type { StatusCode } from "hono/utils/http-status";
-import type { ApiResponseCode } from "./api-response.js";
+import type { ApiResponseCode } from "@repo/shared-lib/api-response";
 
 export class ApiError extends Error {
   constructor(

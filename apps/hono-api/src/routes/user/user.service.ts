@@ -2,16 +2,17 @@ import * as argon2 from "argon2";
 import { and, eq } from "drizzle-orm";
 import * as jose from "jose";
 import cloneDeep from "clone-deep";
+import { ApiResponseCode } from "@repo/shared-lib/api-response";
 import { env } from "../../config/env.js";
 import { db } from "../../db/index.js";
 import {
   usersTable,
+  sessionsTable,
   type User,
   type UserWithoutSensitiveFields,
-} from "../../db/tables/users.table.js";
-import { sessionsTable, type Session } from "../../db/tables/sessions.table.js";
+  type Session,
+} from "@repo/shared-lib/db";
 import { nanoid } from "../../utils/nanoid.js";
-import { ApiResponseCode } from "../../utils/api-response.js";
 import { ApiError } from "../../utils/api-error.js";
 import type { IJwtPayload, TokenType } from "./user.types.js";
 

@@ -6,16 +6,13 @@ import {
   authFormDataSchema,
   type AuthFormData,
 } from "@repo/shared-lib/zod-schemas";
+import { ApiResponse } from "@repo/shared-lib/api-response";
 import { cn } from "@/utils/cn";
-import { SignupUserResponse } from "../signup/actions";
-import { LoginUserResponse } from "../login/actions";
 import { FormType } from "./auth.types";
 
 interface Props {
   formType: FormType;
-  onSubmitAction: (
-    formData: AuthFormData
-  ) => Promise<SignupUserResponse | LoginUserResponse | void>;
+  onSubmitAction: (formData: AuthFormData) => Promise<ApiResponse | void>;
 }
 
 export const AuthForm: React.FC<Props> = ({ formType, onSubmitAction }) => {

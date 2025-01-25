@@ -1,22 +1,16 @@
 "use server";
 
 import { env } from "@/config/env";
-import { AuthFormData } from "@repo/shared-lib/zod-schemas/auth.schema";
+import { AuthFormData } from "@repo/shared-lib/zod-schemas";
+import { ApiResponse } from "@repo/shared-lib/api-response";
 import { loginUser } from "../login/actions";
-
-interface SignupUserErrorResponse {
-  response_code: string;
-  message: string;
-}
-
-export type SignupUserResponse = SignupUserErrorResponse;
 
 /**
  * Signup a user.
  */
 export const signupUser = async (
   authFormData: AuthFormData
-): Promise<SignupUserResponse | void> => {
+): Promise<ApiResponse | void> => {
   const response = await fetch(`${env.NEXT_PUBLIC_API_URL}/users/signup`, {
     method: "POST",
     body: JSON.stringify(authFormData),
@@ -26,7 +20,7 @@ export const signupUser = async (
   });
 
   if (!response.ok) {
-    return await response.json();
+    return (await response.json()) as ApiResponse;
   }
 
   // Login user after signup

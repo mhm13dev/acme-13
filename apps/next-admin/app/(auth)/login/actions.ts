@@ -2,22 +2,17 @@
 
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { AuthFormData } from "@repo/shared-lib/zod-schemas/auth.schema";
+import { AuthFormData } from "@repo/shared-lib/zod-schemas";
+import { ApiResponse } from "@repo/shared-lib/api-response";
+import { LoginUserResponse } from "@repo/shared-lib/api-response/users";
 import { env } from "@/config/env";
-
-interface LoginUserErrorResponse {
-  response_code: string;
-  message: string;
-}
-
-export type LoginUserResponse = LoginUserErrorResponse;
 
 /**
  * Login a user.
  */
 export const loginUser = async (
   authFormData: AuthFormData
-): Promise<LoginUserErrorResponse | void> => {
+): Promise<ApiResponse | void> => {
   const response = await fetch(`${env.NEXT_PUBLIC_API_URL}/users/login`, {
     method: "POST",
     body: JSON.stringify(authFormData),
@@ -26,25 +21,25 @@ export const loginUser = async (
     },
   });
 
-  const data = await response.json();
-
   if (!response.ok) {
-    return data;
+    return (await response.json()) as ApiResponse;
   }
+
+  const { data }: LoginUserResponse = await response.json();
 
   const cookieStore = await cookies();
 
   // FIXME: should be taken from JWT payload
   const expires = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7);
 
-  cookieStore.set("accessToken", data.data.accessToken, {
+  cookieStore.set("accessToken", data.accessToken, {
     httpOnly: true,
     secure: true,
     path: "/",
     sameSite: "strict",
     expires,
   });
-  cookieStore.set("refreshToken", data.data.refreshToken, {
+  cookieStore.set("refreshToken", data.refreshToken, {
     httpOnly: true,
     secure: true,
     path: "/",

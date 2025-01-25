@@ -1,18 +1,16 @@
 import type { NodePgQueryResultHKT } from "drizzle-orm/node-postgres";
 import type { PgTransaction } from "drizzle-orm/pg-core";
-import {
-  db,
-  type DbSchema,
-  type DbTablesWithRelations,
-} from "../../db/index.js";
-import type { User } from "../../db/tables/users.table.js";
-import type { Organization } from "../../db/tables/organizations.table.js";
+import { ApiResponseCode } from "@repo/shared-lib/api-response";
 import {
   orgMembersTable,
+  type User,
+  type Organization,
   type OrgMember,
-} from "../../db/tables/org-members.table.js";
+  type DbSchema,
+  type DbTablesWithRelations,
+} from "@repo/shared-lib/db";
+import { db } from "../../db/index.js";
 import { ApiError } from "../../utils/api-error.js";
-import { ApiResponseCode } from "../../utils/api-response.js";
 
 /**
  * Create an OrgMember record

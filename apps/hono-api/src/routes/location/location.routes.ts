@@ -1,8 +1,8 @@
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
+import { ApiResponse, ApiResponseCode } from "@repo/shared-lib/api-response";
 import { auth } from "../../middlewares/auth.middleware.js";
 import type { HonoAppEnv } from "../../app.js";
-import { ApiResponse, ApiResponseCode } from "../../utils/api-response.js";
 import { paginationSchema } from "../../common/common.schema.js";
 import {
   locationsBaseParamsSchema,

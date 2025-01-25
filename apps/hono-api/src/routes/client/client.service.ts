@@ -1,13 +1,14 @@
 import type { PgTransaction } from "drizzle-orm/pg-core";
 import type { NodePgQueryResultHKT } from "drizzle-orm/node-postgres";
+import { ApiResponseCode } from "@repo/shared-lib/api-response";
 import {
-  db,
+  clientsTable,
+  type Client,
   type DbSchema,
   type DbTablesWithRelations,
-} from "../../db/index.js";
-import { clientsTable, type Client } from "../../db/tables/clients.table.js";
+} from "@repo/shared-lib/db";
+import { db } from "../../db/index.js";
 import { ApiError } from "../../utils/api-error.js";
-import { ApiResponseCode } from "../../utils/api-response.js";
 import { mustBeOrgMember } from "../org-member/org-member.service.js";
 
 /**

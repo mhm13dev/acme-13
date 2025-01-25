@@ -19,7 +19,7 @@ interface IApiResponseParams<T> {
   data?: T;
 }
 
-export class ApiResponse<T> {
+export class ApiResponse<T = unknown> {
   response_code: ApiResponseCode;
   message: string;
   data: T;
