@@ -1,8 +1,8 @@
 import React from "react";
-import { signupUser } from "@/lib/actions/signup-user.action";
 import { AuthHeading } from "../_components/auth-heading";
 import { AuthForm } from "../_components/auth-form";
 import { AuthFooter } from "../_components/auth-footer";
+import { signupUser } from "./actions";
 
 export default function SignupPage() {
   return (

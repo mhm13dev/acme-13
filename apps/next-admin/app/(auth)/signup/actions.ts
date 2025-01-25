@@ -2,7 +2,7 @@
 
 import { env } from "@/config/env";
 import { AuthFormData } from "@repo/shared-lib/zod-schemas/auth.schema";
-import { loginUser } from "./login-user.action";
+import { loginUser } from "../login/actions";
 
 interface SignupUserErrorResponse {
   response_code: string;
