@@ -13,14 +13,20 @@ export const ApiResponseCode = {
 export type ApiResponseCode =
   (typeof ApiResponseCode)[keyof typeof ApiResponseCode];
 
-export class ApiResponse {
+interface IApiResponseParams<T> {
   response_code: ApiResponseCode;
   message: string;
-  data?: any;
+  data?: T;
+}
 
-  constructor(response: ApiResponse) {
+export class ApiResponse<T> {
+  response_code: ApiResponseCode;
+  message: string;
+  data: T;
+
+  constructor(response: IApiResponseParams<T>) {
     this.response_code = response.response_code;
     this.message = response.message;
-    this.data = response.data;
+    this.data = response.data as T;
   }
 }
