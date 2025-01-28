@@ -10,8 +10,13 @@ const refreshTokenPublicKey = await jose.importSPKI(
   env.JWT_ALGORITHM
 );
 
+/**
+ * Authenticate user by verifying the refresh token.
+ * - If refresh token is invalid, redirect to login page.
+ * - Access token is short-lived and can expire quickly.
+ * It's almost safe to assume to use refresh token verification for protecting pages.
+ */
 export async function authenticateUser(): Promise<void> {
-  // Authenticate user
   const cookieStore = await cookies();
 
   try {
