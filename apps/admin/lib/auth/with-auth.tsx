@@ -1,9 +1,7 @@
 import { authenticateUser } from "./authenticate-user";
 
-export function withAuth<T extends React.JSX.IntrinsicAttributes>(
-  Component: React.FC<T>
-) {
-  return async function AuthComponent(props: T) {
+export function withAuth<P extends object>(Component: React.FC<P>) {
+  return async function AuthComponent(props: P) {
     await authenticateUser();
     return <Component {...props} />;
   };
