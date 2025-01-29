@@ -1,5 +1,12 @@
 import { relations } from "drizzle-orm";
-import { index, integer, pgTable, unique, varchar } from "drizzle-orm/pg-core";
+import {
+  index,
+  integer,
+  pgTable,
+  timestamp,
+  unique,
+  varchar,
+} from "drizzle-orm/pg-core";
 import { timestamps } from "../helpers/columns.helpers.js";
 import { usersTable } from "./users.table.js";
 
@@ -13,7 +20,16 @@ export const sessionsTable = pgTable(
         onDelete: "cascade",
       }),
     tokenFamily: varchar({ length: 12 }).notNull(),
-    refreshToken: varchar({ length: 255 }).notNull(),
+    /**
+     * JWT access token (Encrypted)
+     */
+    refreshToken: varchar().notNull(),
+    expiresAt: timestamp().notNull(),
+    /**
+     * Previous refresh token (Encrypted)
+     */
+    previousRefreshToken: varchar(),
+    previousUsedAt: timestamp(),
     ...timestamps,
   },
   (table) => [

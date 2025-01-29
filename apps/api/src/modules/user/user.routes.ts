@@ -66,7 +66,7 @@ export const users = new Hono<HonoAppEnv>()
   .post("/refresh-tokens", auth("refresh_token"), async (ctx) => {
     const { accessToken, refreshToken } = await refreshTokens({
       user: await ctx.get("user").load(),
-      session: ctx.get("session"),
+      tokenPayload: ctx.get("tokenPayload"),
     });
 
     return ctx.json<RefreshTokensResponse>(

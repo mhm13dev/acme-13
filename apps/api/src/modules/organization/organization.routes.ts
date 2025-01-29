@@ -17,7 +17,7 @@ export const organizations = new Hono<HonoAppEnv>()
    */
   .post("/", zValidator("json", createOrganizationSchema), async (ctx) => {
     const { name, slug } = ctx.req.valid("json");
-    const { userId } = ctx.get("session");
+    const { userId } = ctx.get("tokenPayload");
 
     const organization = await createOrganization({
       name,
@@ -42,7 +42,7 @@ export const organizations = new Hono<HonoAppEnv>()
    * Get Organizations in which the Current User is a member
    */
   .get("/", async (ctx) => {
-    const { userId } = ctx.get("session");
+    const { userId } = ctx.get("tokenPayload");
 
     const organizations = await getOrganizationsForMember({
       userId,

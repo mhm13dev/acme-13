@@ -1,10 +1,9 @@
+import crypto from "node:crypto";
 import * as argon2 from "argon2";
-import { and, eq } from "drizzle-orm";
+import { and, eq, lt, or } from "drizzle-orm";
 import * as jose from "jose";
 import cloneDeep from "clone-deep";
 import { ApiResponseCode } from "@repo/shared-lib/api-response";
-import { env } from "../../config/env.js";
-import { db } from "../../db/index.js";
 import {
   usersTable,
   sessionsTable,
@@ -12,8 +11,11 @@ import {
   type UserWithoutSensitiveFields,
   type Session,
 } from "@repo/shared-lib/db";
+import { env } from "../../config/env.js";
+import { db } from "../../db/index.js";
 import { nanoid } from "../../utils/nanoid.js";
 import { ApiError } from "../../utils/api-error.js";
+import type { TokenPayload } from "../../middlewares/auth.middleware.js";
 import type { IJwtPayload, TokenType } from "./user.types.js";
 
 // Prepare JWT secrets
@@ -109,7 +111,8 @@ export async function loginUser(params: {
     .values({
       userId: user.id,
       tokenFamily,
-      refreshToken: await argon2.hash(tokenPair.refreshToken),
+      refreshToken: encryptRefreshToken(tokenPair.refreshToken),
+      expiresAt: tokenPair.refreshTokenExpiresAt,
     })
     .execute();
 
@@ -117,33 +120,25 @@ export async function loginUser(params: {
 }
 
 /**
- * Login a user
+ * Refresh tokens
  */
 export async function refreshTokens(params: {
   user: UserWithoutSensitiveFields;
-  session: Pick<Session, "tokenFamily"> & {
-    refreshToken: string;
-  };
+  tokenPayload: TokenPayload<"refresh_token">;
 }): Promise<{
   accessToken: string;
   refreshToken: string;
 }> {
-  const {
-    user,
-    session: { refreshToken, tokenFamily },
-  } = params;
+  const { user, tokenPayload } = params;
 
   // Get session from database
   const session = await db
-    .select({
-      id: sessionsTable.id,
-      refreshToken: sessionsTable.refreshToken,
-    })
+    .select()
     .from(sessionsTable)
     .where(
       and(
         eq(sessionsTable.userId, user.id),
-        eq(sessionsTable.tokenFamily, tokenFamily)
+        eq(sessionsTable.tokenFamily, tokenPayload.tokenFamily)
       )
     )
     .execute()
@@ -153,33 +148,94 @@ export async function refreshTokens(params: {
     // User was logged out of this session
     throw new ApiError(
       ApiResponseCode.unauthorized,
-      "Invalid refresh token",
+      "Session expired. Please login again.",
       401
     );
   }
 
-  // Verify refresh token
-  if (!(await argon2.verify(session.refreshToken, refreshToken))) {
-    // The refresh token was compromised. Logout the user from this session
-    await db
-      .delete(sessionsTable)
-      .where(eq(sessionsTable.id, session.id))
-      .execute();
+  // Decrypt the refresh tokens from the session
+  const decryptedRefreshTokenFromSession = decryptRefreshToken(
+    session.refreshToken
+  );
+  const decryptedPreviousRefreshTokenFromSession = session.previousRefreshToken
+    ? decryptRefreshToken(session.previousRefreshToken)
+    : null;
+
+  /**
+   * If it is an old refresh token of the same token family,
+   * that means it was already used before and it's a replay attack.
+   * We should invalidate the session.
+   */
+  if (
+    decryptedRefreshTokenFromSession !== tokenPayload.refreshToken &&
+    decryptedPreviousRefreshTokenFromSession !== tokenPayload.refreshToken
+  ) {
+    // Invalidate the session
+    await invalidateSession({ session, user });
     throw new ApiError(
       ApiResponseCode.unauthorized,
-      "Invalid refresh token",
+      "Refresh token was already used. Please login again.",
       401
     );
   }
 
+  /**
+   * If the refresh token is the previous refresh token,
+   * and it's `previousUsedAt` is within the 30 seconds time frame,
+   * then we consider it a valid request but instead of generating a new refresh token,
+   * we return the currently active refresh token with a newly generated access token.
+   *
+   * Else, we consider it a replay attack with recently used refresh token outside the allowed time frame.
+   * In this case, we invalidate the session.
+   */
+  if (decryptedPreviousRefreshTokenFromSession === tokenPayload.refreshToken) {
+    if (
+      !session.previousUsedAt ||
+      new Date().getTime() - session.previousUsedAt.getTime() > 30000
+    ) {
+      // Invalidate the session
+      await invalidateSession({ session, user });
+      throw new ApiError(
+        ApiResponseCode.unauthorized,
+        "Refresh token was recently used. Please login again.",
+        401
+      );
+    }
+
+    // Generate JWT token pair
+    const tokenPair = await generateTokenPair({
+      user,
+      tokenFamily: tokenPayload.tokenFamily,
+    });
+
+    return {
+      // New access token
+      accessToken: tokenPair.accessToken,
+      // Current active refresh token
+      refreshToken: decryptedRefreshTokenFromSession,
+    };
+  }
+
+  /**
+   * From here, we can assume that the refresh token is the current active refresh token and is valid.
+   * So, we can generate a new token pair and update the session in the database.
+   */
+
   // Generate JWT token pair
-  const tokenPair = await generateTokenPair({ user, tokenFamily });
+  const tokenPair = await generateTokenPair({
+    user,
+    tokenFamily: tokenPayload.tokenFamily,
+    // Use the same expiry as the previous refresh token to avoid infinite refresh token lifetime
+    refreshTokenExpiresAt: tokenPayload.exp,
+  });
 
   // Update the session in the database
   await db
     .update(sessionsTable)
     .set({
-      refreshToken: await argon2.hash(tokenPair.refreshToken),
+      refreshToken: encryptRefreshToken(tokenPair.refreshToken),
+      previousRefreshToken: encryptRefreshToken(tokenPayload.refreshToken),
+      previousUsedAt: new Date(),
     })
     .where(eq(sessionsTable.id, session.id))
     .execute();
@@ -191,16 +247,51 @@ export async function refreshTokens(params: {
 }
 
 /**
+ * Invalidate a session.
+ * Delete the provided session and other expired sessions of the user from the database.
+ */
+async function invalidateSession(params: {
+  session: Session;
+  user: UserWithoutSensitiveFields;
+}) {
+  const { session, user } = params;
+
+  await db
+    .delete(sessionsTable)
+    .where(
+      or(
+        eq(sessionsTable.id, session.id),
+        and(
+          eq(sessionsTable.userId, user.id),
+          lt(sessionsTable.expiresAt, new Date())
+        )
+      )
+    )
+    .execute();
+}
+
+/**
  * Generate JWT token pair
  */
 async function generateTokenPair(params: {
   user: Pick<User, "id" | "email">;
   tokenFamily: string;
+  /**
+   * Expiry time for the refresh token in seconds.
+   * - It should be set to the required expiry time in future.
+   * We won't calculate it based on the current time in this function.
+   */
+  refreshTokenExpiresAt?: number;
 }): Promise<{
   accessToken: string;
   refreshToken: string;
+  refreshTokenExpiresAt: Date;
 }> {
-  const { user, tokenFamily } = params;
+  const {
+    user,
+    tokenFamily,
+    refreshTokenExpiresAt: refreshTokenExpiresAtParam,
+  } = params;
 
   const payload: IJwtPayload = {
     sub: user.id.toString(),
@@ -208,20 +299,30 @@ async function generateTokenPair(params: {
     token_family: tokenFamily,
   };
 
+  const accessTokenExpiresAt =
+    Math.floor(Date.now() / 1000) + env.ACCESS_TOKEN_EXPIRY;
+  const refreshTokenExpiresAt =
+    refreshTokenExpiresAtParam ??
+    Math.floor(Date.now() / 1000) + env.REFRESH_TOKEN_EXPIRY;
+
   const [accessToken, refreshToken] = await Promise.all([
     new jose.SignJWT(payload)
       .setProtectedHeader({ alg: env.JWT_ALGORITHM })
       .setIssuedAt()
-      .setExpirationTime(env.ACCESS_TOKEN_EXPIRY)
+      .setExpirationTime(accessTokenExpiresAt)
       .sign(accessTokenPrivateKey),
     new jose.SignJWT(payload)
       .setProtectedHeader({ alg: env.JWT_ALGORITHM })
       .setIssuedAt()
-      .setExpirationTime(env.REFRESH_TOKEN_EXPIRY)
+      .setExpirationTime(refreshTokenExpiresAt)
       .sign(refreshTokenPrivateKey),
   ]);
 
-  return { accessToken, refreshToken };
+  return {
+    accessToken,
+    refreshToken,
+    refreshTokenExpiresAt: new Date(refreshTokenExpiresAt * 1000),
+  };
 }
 
 /**
@@ -257,19 +358,28 @@ export async function verifyJwt(
   loadUser: () => Promise<UserWithoutSensitiveFields>;
   jwtPayload: IJwtPayload;
 }> {
-  const { payload } = await jose.jwtVerify<IJwtPayload>(
-    token,
-    type === "access_token" ? accessTokenPublicKey : refreshTokenPublicKey,
-    {
-      algorithms: [env.JWT_ALGORITHM],
-    }
-  );
-
-  return {
-    // Get user from database on demand
-    loadUser: () => loadUser(Number(payload.sub)),
-    jwtPayload: payload,
-  };
+  try {
+    const { payload } = await jose.jwtVerify<IJwtPayload>(
+      token,
+      type === "access_token" ? accessTokenPublicKey : refreshTokenPublicKey,
+      {
+        algorithms: [env.JWT_ALGORITHM],
+      }
+    );
+    return {
+      // Get user from database on demand
+      loadUser: () => loadUser(Number(payload.sub)),
+      jwtPayload: payload,
+    };
+  } catch (error) {
+    throw new ApiError(
+      ApiResponseCode.unauthorized,
+      `Invalid ${
+        type === "access_token" ? "access" : "refresh"
+      } token. Please login again.`,
+      401
+    );
+  }
 }
 
 /**
@@ -281,4 +391,62 @@ function omitSensitiveUserFields<T>(user: T): UserWithoutSensitiveFields<T> {
     ...userCopy,
     password: undefined,
   };
+}
+
+/**
+ * Encrypt Refresh Token with AES-256-GCM
+ */
+function encryptRefreshToken(refreshToken: string): string {
+  // Generate a 12-byte IV
+  const iv = crypto.randomBytes(12);
+
+  // Create a cipher instance
+  const cipher = crypto.createCipheriv(
+    env.REFRESH_TOKEN_ENCRYPTION_ALGORITHM,
+    env.REFRESH_TOKEN_ENCRYPTION_KEY,
+    iv
+  );
+
+  // Encrypt the refresh token
+  const encrypted = Buffer.concat([
+    cipher.update(refreshToken, "utf8"),
+    cipher.final(),
+  ]);
+
+  // Get the authentication tag
+  const authTag = cipher.getAuthTag();
+
+  // Combine IV, authTag, and encrypted refresh token
+  return Buffer.concat([iv, authTag, encrypted]).toString("base64");
+}
+
+/**
+ * Decrypt Refresh Token with AES-256-GCM
+ */
+function decryptRefreshToken(encryptedRefreshToken: string): string {
+  // Decode the base64-encoded refresh token
+  const data = Buffer.from(encryptedRefreshToken, "base64");
+
+  // Extract the IV, authTag, and encrypted refresh token
+  const iv = data.subarray(0, 12);
+  const authTag = data.subarray(12, 28);
+  const encrypted = data.subarray(28);
+
+  // Create a decipher instance
+  const decipher = crypto.createDecipheriv(
+    env.REFRESH_TOKEN_ENCRYPTION_ALGORITHM,
+    env.REFRESH_TOKEN_ENCRYPTION_KEY,
+    iv
+  );
+
+  // Set the authentication tag
+  decipher.setAuthTag(authTag);
+
+  // Decrypt and return the refresh token
+  const decrypted = Buffer.concat([
+    decipher.update(encrypted),
+    decipher.final(),
+  ]);
+
+  return decrypted.toString("utf8");
 }

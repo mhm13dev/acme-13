@@ -21,7 +21,7 @@ export const clients = new Hono<HonoAppEnv>()
     zValidator("param", clientsBaseParamsSchema),
     zValidator("json", createClientSchema),
     async (ctx) => {
-      const { userId } = ctx.get("session");
+      const { userId } = ctx.get("tokenPayload");
       const { orgId } = ctx.req.valid("param");
       const { name } = ctx.req.valid("json");
 
@@ -51,7 +51,7 @@ export const clients = new Hono<HonoAppEnv>()
     zValidator("param", clientsBaseParamsSchema),
     zValidator("query", paginationSchema),
     async (ctx) => {
-      const { userId } = ctx.get("session");
+      const { userId } = ctx.get("tokenPayload");
       const { orgId } = ctx.req.valid("param");
       const { limit, offset } = ctx.req.valid("query");
 
