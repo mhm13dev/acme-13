@@ -12,7 +12,7 @@ import { createClient, getOrganizationClients } from "./client.service.js";
 
 export const clients = new Hono<HonoAppEnv>()
   .basePath("/organizations/:orgId/clients")
-  .use(auth("access_token"))
+  .use(auth)
   /**
    * Create a new Client
    */

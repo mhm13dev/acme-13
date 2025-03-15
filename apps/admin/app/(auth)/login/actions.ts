@@ -7,10 +7,7 @@ import { AuthFormData } from "@repo/shared-lib/zod-schemas";
 import { ApiResponse } from "@repo/shared-lib/api-response";
 import { LoginUserResponse } from "@repo/shared-lib/api-response/users";
 import { env } from "@/config/env";
-import {
-  ACCESS_TOKEN_COOKIE,
-  REFRESH_TOKEN_COOKIE,
-} from "@/lib/auth/constants";
+import { ACCESS_TOKEN_COOKIE } from "@/lib/auth/constants";
 
 /**
  * Login a user.
@@ -40,13 +37,6 @@ export const loginUser = async (
     path: "/",
     sameSite: "strict",
     expires: new Date(jose.decodeJwt(data.accessToken).exp! * 1000),
-  });
-  cookieStore.set(REFRESH_TOKEN_COOKIE, data.refreshToken, {
-    httpOnly: true,
-    secure: true,
-    path: "/",
-    sameSite: "strict",
-    expires: new Date(jose.decodeJwt(data.refreshToken).exp! * 1000),
   });
 
   // Redirect to Home Page on successful login

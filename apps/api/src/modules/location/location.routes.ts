@@ -12,7 +12,7 @@ import { createLocation, getClientLocations } from "./location.service.js";
 
 export const locations = new Hono<HonoAppEnv>()
   .basePath("/organizations/:orgId/clients/:clientId/locations")
-  .use(auth("access_token"))
+  .use(auth)
   /**
    * Create a new Location
    */
