@@ -1,4 +1,4 @@
-import { eq, getTableColumns, inArray, sql } from "drizzle-orm";
+import { eq, getTableColumns } from "drizzle-orm";
 import { ApiResponseCode } from "@repo/shared-lib/api-response";
 import {
   organizationsTable,

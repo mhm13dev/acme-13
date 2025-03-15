@@ -6,12 +6,6 @@ export {
 } from "./tables/users.table.js";
 
 export {
-  sessionsTable,
-  sessionsRelations,
-  type Session,
-} from "./tables/sessions.table.js";
-
-export {
   organizationsTable,
   organizationsRelations,
   type Organization,

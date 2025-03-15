@@ -1,6 +1,5 @@
 import type { ExtractTablesWithRelations } from "drizzle-orm";
 import { usersRelations, usersTable } from "./tables/users.table.js";
-import { sessionsRelations, sessionsTable } from "./tables/sessions.table.js";
 import {
   organizationsRelations,
   organizationsTable,
@@ -18,8 +17,6 @@ import {
 export const DbSchema = {
   usersTable,
   usersRelations,
-  sessionsTable,
-  sessionsRelations,
   organizationsTable,
   organizationsRelations,
   orgMembersTable,

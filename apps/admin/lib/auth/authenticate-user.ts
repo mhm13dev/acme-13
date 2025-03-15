@@ -3,31 +3,29 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import * as jose from "jose";
 import { env } from "@/config/env";
-import { REFRESH_TOKEN_COOKIE } from "./constants";
+import { ACCESS_TOKEN_COOKIE } from "./constants";
 
-const refreshTokenPublicKey = await jose.importSPKI(
-  env.REFRESH_TOKEN_PUBLIC_KEY_PEM,
+const accessTokenPublicKey = await jose.importSPKI(
+  env.ACCESS_TOKEN_PUBLIC_KEY_PEM,
   env.JWT_ALGORITHM
 );
 
 /**
- * Authenticate user by verifying the refresh token.
- * - If refresh token is invalid, redirect to login page.
- * - Access token is short-lived and can expire quickly.
- * It's almost safe to assume to use refresh token verification for protecting pages.
+ * Authenticate user by verifying the access token.
+ * - If access token is invalid, redirect to login page.
  */
 export async function authenticateUser(): Promise<void> {
   const cookieStore = await cookies();
 
   try {
-    const refreshToken = cookieStore.get(REFRESH_TOKEN_COOKIE);
+    const accessToken = cookieStore.get(ACCESS_TOKEN_COOKIE);
 
-    if (!refreshToken?.value) {
-      throw new Error("Refresh token not found");
+    if (!accessToken?.value) {
+      throw new Error("Access token not found");
     }
 
-    // Verify refresh token
-    await jose.jwtVerify(refreshToken.value, refreshTokenPublicKey, {
+    // Verify access token
+    await jose.jwtVerify(accessToken.value, accessTokenPublicKey, {
       algorithms: [env.JWT_ALGORITHM],
     });
   } catch (error) {

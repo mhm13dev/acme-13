@@ -11,7 +11,7 @@ import {
 
 export const organizations = new Hono<HonoAppEnv>()
   .basePath("/organizations")
-  .use(auth("access_token"))
+  .use(auth)
   /**
    * Create a new Organization
    */

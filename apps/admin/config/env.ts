@@ -11,7 +11,7 @@ const envSchema = z.object({
 
   // AUTH
   JWT_ALGORITHM: z.enum(["RS256"]).default("RS256"),
-  REFRESH_TOKEN_PUBLIC_KEY_PEM: z.string().trim(),
+  ACCESS_TOKEN_PUBLIC_KEY_PEM: z.string().trim(),
 });
 
 export const env = envSchema.parse(process.env);

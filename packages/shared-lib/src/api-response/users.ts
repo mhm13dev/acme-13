@@ -8,12 +8,6 @@ export type SignupUserResponse = ApiResponse<{
 export type LoginUserResponse = ApiResponse<{
   user: UserWithoutSensitiveFields;
   accessToken: string;
-  refreshToken: string;
-}>;
-
-export type RefreshTokensResponse = ApiResponse<{
-  accessToken: string;
-  refreshToken: string;
 }>;
 
 export type MeResponse = ApiResponse<{
