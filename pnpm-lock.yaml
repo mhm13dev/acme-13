@@ -144,6 +144,9 @@ importers:
       drizzle-orm:
         specifier: ^0.38.4
         version: 0.38.4(@types/pg@8.11.10)(@types/react@19.0.7)(pg@8.13.1)(react@19.0.0)
+      jose:
+        specifier: ^5.9.6
+        version: 5.9.6
       zod:
         specifier: ^3.24.1
         version: 3.24.1

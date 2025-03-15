@@ -3,6 +3,7 @@ import { eq } from "drizzle-orm";
 import * as jose from "jose";
 import cloneDeep from "clone-deep";
 import { ApiResponseCode } from "@repo/shared-lib/api-response";
+import type { IJwtPayload } from "@repo/shared-lib/api-response/users";
 import {
   usersTable,
   type User,
@@ -11,7 +12,6 @@ import {
 import { env } from "../../config/env.js";
 import { db } from "../../db/index.js";
 import { ApiError } from "../../utils/api-error.js";
-import type { IJwtPayload } from "./user.types.js";
 
 // Prepare JWT secret
 const accessTokenPrivateKey = await jose.importPKCS8(

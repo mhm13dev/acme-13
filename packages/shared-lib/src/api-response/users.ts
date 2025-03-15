@@ -1,3 +1,4 @@
+import type { JWTPayload } from "jose";
 import type { UserWithoutSensitiveFields } from "../db/index.js";
 import type { ApiResponse } from "./index.js";
 
@@ -13,3 +14,8 @@ export type LoginUserResponse = ApiResponse<{
 export type MeResponse = ApiResponse<{
   user: UserWithoutSensitiveFields;
 }>;
+
+export interface IJwtPayload extends JWTPayload {
+  sub: string;
+  email: string;
+}

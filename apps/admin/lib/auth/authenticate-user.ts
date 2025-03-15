@@ -2,6 +2,7 @@ import "server-only";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import * as jose from "jose";
+import { IJwtPayload } from "@repo/shared-lib/api-response/users";
 import { env } from "@/config/env";
 import { ACCESS_TOKEN_COOKIE } from "./constants";
 
@@ -14,7 +15,7 @@ const accessTokenPublicKey = await jose.importSPKI(
  * Authenticate user by verifying the access token.
  * - If access token is invalid, redirect to login page.
  */
-export async function authenticateUser(): Promise<void> {
+export async function authenticateUser(): Promise<IJwtPayload> {
   const cookieStore = await cookies();
 
   try {
@@ -25,9 +26,15 @@ export async function authenticateUser(): Promise<void> {
     }
 
     // Verify access token
-    await jose.jwtVerify(accessToken.value, accessTokenPublicKey, {
-      algorithms: [env.JWT_ALGORITHM],
-    });
+    const { payload } = await jose.jwtVerify<IJwtPayload>(
+      accessToken.value,
+      accessTokenPublicKey,
+      {
+        algorithms: [env.JWT_ALGORITHM],
+      }
+    );
+
+    return payload;
   } catch (error) {
     console.error(error);
     // Redirect to login page if access token is invalid
