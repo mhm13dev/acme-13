@@ -10,11 +10,11 @@
   },
   "dependencies": {
     "drizzle-orm": "^0.38.4",
-    "jose": "^5.9.6",
-    "zod": "^3.24.1"
+    "jose": "^5.10.0",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
-    "typescript": "^5"
+    "typescript": "^5.8.2"
   },
   "exports": {
     "./zod-schemas": "./dist/zod-schemas/index.js",
