@@ -1,5 +1,6 @@
 import React from "react";
-import { publicOnly } from "@/lib/auth/public-only";
+import { AppRoutes } from "@/config/routes";
+import { authWrapper } from "@/lib/auth/auth-wrapper";
 import { AuthHeading } from "../_components/auth-heading";
 import { AuthForm } from "../_components/auth-form";
 import { AuthFooter } from "../_components/auth-footer";
@@ -17,4 +18,4 @@ export function LoginPage() {
   );
 }
 
-export default publicOnly(LoginPage);
+export default authWrapper(LoginPage, AppRoutes.auth.login.auth);

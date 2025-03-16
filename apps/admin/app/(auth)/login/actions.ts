@@ -7,6 +7,7 @@ import { AuthFormData } from "@repo/shared-lib/zod-schemas";
 import { ApiResponse } from "@repo/shared-lib/api-response";
 import { LoginUserResponse } from "@repo/shared-lib/api-response/users";
 import { env } from "@/config/env";
+import { AppRoutes } from "@/config/routes";
 import { ACCESS_TOKEN_COOKIE } from "@/lib/auth/constants";
 
 /**
@@ -40,5 +41,5 @@ export const loginUser = async (
   });
 
   // Redirect to Home Page on successful login
-  redirect("/");
+  redirect(AppRoutes.selectOrganization.path);
 };

@@ -1,7 +1,8 @@
 import React from "react";
 import type { IJwtPayload } from "@repo/shared-lib/api-response/users";
+import { AppRoutes } from "@/config/routes";
+import { authWrapper } from "@/lib/auth/auth-wrapper";
 import { AppWrapper } from "@/components/app-wrapper";
-import { withAuth } from "@/lib/auth/with-auth";
 
 function HomePage({ authUser }: { authUser: IJwtPayload }) {
   return (
@@ -17,4 +18,4 @@ function HomePage({ authUser }: { authUser: IJwtPayload }) {
   );
 }
 
-export default withAuth(HomePage);
+export default authWrapper(HomePage, AppRoutes.home.auth);

@@ -13,9 +13,8 @@ const accessTokenPublicKey = await jose.importSPKI(
 
 /**
  * Authenticate user by verifying the access token.
- * - If access token is invalid, redirect to login page.
  */
-export async function authenticateUser(): Promise<IJwtPayload> {
+export async function authenticateUser(): Promise<IJwtPayload | null> {
   const cookieStore = await cookies();
 
   try {
@@ -36,8 +35,6 @@ export async function authenticateUser(): Promise<IJwtPayload> {
 
     return payload;
   } catch (error) {
-    console.error(error);
-    // Redirect to login page if access token is invalid
-    redirect("/login");
+    return null;
   }
 }
