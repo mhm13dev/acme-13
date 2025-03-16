@@ -7,7 +7,7 @@ import {
   type AuthFormData,
 } from "@repo/shared-lib/zod-schemas";
 import { ApiResponse } from "@repo/shared-lib/api-response";
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/utils";
 import { FormType } from "./auth.types";
 
 interface Props {
@@ -65,7 +65,7 @@ export const AuthForm: React.FC<Props> = ({ formType, onSubmitAction }) => {
             "block rounded-md w-full p-2 border-none focus:outline-hidden focus:border-none ring-2",
             errors.email
               ? "ring-red-500 focus:ring-red-500"
-              : "ring-slate-200 focus:ring-black"
+              : "ring-border focus:ring-black"
           )}
           placeholder="johndoe@example.com"
           required
@@ -88,7 +88,7 @@ export const AuthForm: React.FC<Props> = ({ formType, onSubmitAction }) => {
             "block rounded-md w-full p-2 border-none focus:outline-hidden focus:border-none ring-2",
             errors.password
               ? "ring-red-500 focus:ring-red-500"
-              : "ring-slate-200 focus:ring-black"
+              : "ring-border focus:ring-black"
           )}
           placeholder="********"
           required
