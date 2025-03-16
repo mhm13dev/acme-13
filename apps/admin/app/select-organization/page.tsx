@@ -13,12 +13,12 @@ function SelectOrganizationPage() {
             <h1 className="text-xl font-bold text-center">
               Select Organization
             </h1>
-            <div className="border rounded-lg mt-4">
+            <div className="border border-gray-200 rounded-lg mt-4 overflow-hidden">
               {organizations.map((organization) => (
                 <Link
                   key={organization.id}
                   href={`/o/${organization.id}`}
-                  className="flex items-center justify-between gap-2 border-b last:border-b-0 py-3 px-4 hover:bg-gray-50"
+                  className="flex items-center justify-between gap-2 border-b border-gray-200 last:border-b-0 py-3 px-4 hover:bg-gray-50"
                 >
                   <h2 className="text-base font-medium">{organization.name}</h2>
                   <span className="text-sm text-gray-500 font-medium">
@@ -45,7 +45,7 @@ function SelectOrganizationPage() {
               </p>
             </div>
           )}
-          <button className="mt-4 bg-black text-white py-2 px-4 rounded-md font-medium block w-full focus:outline-none focus:border-none focus:ring-2 focus:ring-black">
+          <button className="mt-4 bg-black text-white py-2 px-4 rounded-md font-medium block w-full focus:outline-hidden focus:border-none focus:ring-2 focus:ring-black cursor-pointer">
             Create Organization
           </button>
         </div>

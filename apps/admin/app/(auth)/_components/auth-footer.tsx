@@ -12,7 +12,7 @@ export const AuthFooter: React.FC<Props> = ({ formType }) => {
       {formType === "login" ? "Don't" : "Already"} have an account?{" "}
       <Link
         href={formType === "login" ? "/signup" : "/login"}
-        className="font-medium focus:outline-none focus:border-none focus:ring-2 focus:ring-black"
+        className="font-medium focus:outline-hidden focus:border-none focus:ring-2 focus:ring-black"
       >
         {formType === "login" ? "Sign up" : "Login"}
       </Link>

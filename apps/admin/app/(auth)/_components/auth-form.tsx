@@ -62,7 +62,7 @@ export const AuthForm: React.FC<Props> = ({ formType, onSubmitAction }) => {
           type="email"
           id={`email-${authFormId}`}
           className={cn(
-            "block rounded-md w-full p-2 border-none focus:outline-none focus:border-none ring-2",
+            "block rounded-md w-full p-2 border-none focus:outline-hidden focus:border-none ring-2",
             errors.email
               ? "ring-red-500 focus:ring-red-500"
               : "ring-slate-200 focus:ring-black"
@@ -85,7 +85,7 @@ export const AuthForm: React.FC<Props> = ({ formType, onSubmitAction }) => {
           type="password"
           id={`password-${authFormId}`}
           className={cn(
-            "block rounded-md w-full p-2 border-none focus:outline-none focus:border-none ring-2",
+            "block rounded-md w-full p-2 border-none focus:outline-hidden focus:border-none ring-2",
             errors.password
               ? "ring-red-500 focus:ring-red-500"
               : "ring-slate-200 focus:ring-black"
@@ -99,7 +99,7 @@ export const AuthForm: React.FC<Props> = ({ formType, onSubmitAction }) => {
       <div className="space-y-2">
         <button
           disabled={Object.keys(errors).length > 0 && !errors.root}
-          className="bg-black text-white py-2 px-4 rounded-md font-medium block w-full focus:outline-none focus:border-none focus:ring-2 focus:ring-black"
+          className="bg-black text-white py-2 px-4 rounded-md font-medium block w-full focus:outline-hidden focus:border-none focus:ring-2 focus:ring-black cursor-pointer"
         >
           {formType === "login" ? "Login" : "Sign up"}
         </button>

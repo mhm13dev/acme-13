@@ -7,7 +7,10 @@ export const AppWrapper: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   ...props
 }) => {
   return (
-    <div className={cn("max-w-screen-2xl mx-auto p-4", className)} {...props}>
+    <div
+      className={cn("max-w-(--breakpoint-2xl) mx-auto p-4", className)}
+      {...props}
+    >
       {children}
     </div>
   );
