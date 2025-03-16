@@ -8,8 +8,12 @@ interface Props {
 
 export default function AuthLayout({ children }: Props) {
   return (
-    <AppWrapper className="py-0 max-w-xl text-black min-h-screen flex flex-col justify-center">
-      <div className="border px-4 py-8 rounded-md space-y-6">{children}</div>
-    </AppWrapper>
+    <div className="bg-muted">
+      <AppWrapper className="flex justify-center items-center h-screen">
+        <div className="border rounded-md max-w-lg w-full bg-background p-8 space-y-6">
+          {children}
+        </div>
+      </AppWrapper>
+    </div>
   );
 }

@@ -9,47 +9,49 @@ import { Button } from "@/components/ui/button";
 
 function SelectOrganizationPage() {
   return (
-    <AppWrapper className="flex justify-center items-center h-screen">
-      <section className="rounded-lg max-w-md w-full">
-        {organizations.length > 0 && (
-          <>
-            <TypographyH3 className="text-center">
-              Select Organization
-            </TypographyH3>
-            <div className="border rounded-md mt-4 overflow-hidden">
-              {organizations.map((organization) => (
-                <Link
-                  key={organization.id}
-                  href={`/o/${organization.id}`}
-                  className="flex items-center justify-between border-b last:border-b-0 p-3 hover:bg-muted focus:bg-muted focus:outline-hidden text-sm"
-                >
-                  <span className="font-medium">{organization.name}</span>
-                  <span className="text-muted-foreground font-normal">
-                    {organization.id}
-                  </span>
-                </Link>
-              ))}
+    <div className="bg-muted">
+      <AppWrapper className="flex justify-center items-center h-screen">
+        <section className="border rounded-md max-w-lg w-full bg-background p-8">
+          {organizations.length > 0 && (
+            <>
+              <TypographyH3 className="text-center">
+                Select Organization
+              </TypographyH3>
+              <div className="border rounded-md mt-4 overflow-hidden">
+                {organizations.map((organization) => (
+                  <Link
+                    key={organization.id}
+                    href={`/o/${organization.id}`}
+                    className="flex items-center justify-between border-b last:border-b-0 p-3 hover:bg-muted focus:bg-muted focus:outline-hidden text-sm"
+                  >
+                    <span className="font-medium">{organization.name}</span>
+                    <span className="text-muted-foreground font-normal">
+                      {organization.id}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </>
+          )}
+
+          <div className="mt-4 space-y-4">
+            <div className="text-center text-muted-foreground text-sm space-y-4">
+              {organizations.length > 0 ? (
+                <p>Don&apos;t see the organization you&apos;re looking for?</p>
+              ) : (
+                <p>
+                  You don&apos;t have any organizations yet.
+                  <br />
+                  Create one to get started.
+                </p>
+              )}
             </div>
-          </>
-        )}
 
-        <div className="mt-4 space-y-4">
-          <div className="text-center text-muted-foreground text-sm space-y-4">
-            {organizations.length > 0 ? (
-              <p>Don&apos;t see the organization you&apos;re looking for?</p>
-            ) : (
-              <p>
-                You don&apos;t have any organizations yet.
-                <br />
-                Create one to get started.
-              </p>
-            )}
+            <Button className="w-full">Create Organization</Button>
           </div>
-
-          <Button className="w-full">Create Organization</Button>
-        </div>
-      </section>
-    </AppWrapper>
+        </section>
+      </AppWrapper>
+    </div>
   );
 }
 
