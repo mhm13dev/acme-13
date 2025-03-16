@@ -1,5 +1,8 @@
 import React from "react";
 import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+
 import { FormType } from "./auth.types";
 
 interface Props {
@@ -8,14 +11,15 @@ interface Props {
 
 export const AuthFooter: React.FC<Props> = ({ formType }) => {
   return (
-    <p className="text-center text-sm">
-      {formType === "login" ? "Don't" : "Already"} have an account?{" "}
-      <Link
-        href={formType === "login" ? "/signup" : "/login"}
-        className="font-medium focus:outline-hidden focus:border-none focus:ring-2 focus:ring-black"
-      >
-        {formType === "login" ? "Sign up" : "Login"}
-      </Link>
-    </p>
+    <div>
+      <p className="text-center text-sm">
+        {formType === "login" ? "Don't" : "Already"} have an account?{" "}
+        <Button variant="link" className="p-0 h-auto" asChild>
+          <Link href={formType === "login" ? "/signup" : "/login"}>
+            {formType === "login" ? "Sign up" : "Login"}
+          </Link>
+        </Button>
+      </p>
+    </div>
   );
 };

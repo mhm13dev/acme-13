@@ -2,12 +2,16 @@
 import React, { useId } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+
 import {
   authFormDataSchema,
   type AuthFormData,
 } from "@repo/shared-lib/zod-schemas";
 import { ApiResponse } from "@repo/shared-lib/api-response";
-import { cn } from "@/lib/utils";
+
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { FormType } from "./auth.types";
 
 interface Props {
@@ -43,57 +47,35 @@ export const AuthForm: React.FC<Props> = ({ formType, onSubmitAction }) => {
   return (
     <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
       <div className="space-y-2">
-        <label
-          htmlFor={`email-${authFormId}`}
-          className="block text-sm font-medium text-gray-00"
-        >
-          Email
-        </label>
-        <input
-          type="email"
+        <Label htmlFor={`email-${authFormId}`}>Email</Label>
+        <Input
           id={`email-${authFormId}`}
-          className={cn(
-            "block rounded-md w-full p-2 border-none focus:outline-hidden focus:border-none ring-2",
-            errors.email
-              ? "ring-red-500 focus:ring-red-500"
-              : "ring-border focus:ring-black"
-          )}
+          type="email"
           placeholder="johndoe@example.com"
-          required
           {...register("email")}
         />
         <p className="text-red-500 text-sm">{errors.email?.message}</p>
       </div>
 
       <div className="space-y-2">
-        <label
-          htmlFor={`password-${authFormId}`}
-          className="block text-sm font-medium text-gray-00"
-        >
-          Password
-        </label>
-        <input
-          type="password"
+        <Label htmlFor={`password-${authFormId}`}>Password</Label>
+        <Input
           id={`password-${authFormId}`}
-          className={cn(
-            "block rounded-md w-full p-2 border-none focus:outline-hidden focus:border-none ring-2",
-            errors.password
-              ? "ring-red-500 focus:ring-red-500"
-              : "ring-border focus:ring-black"
-          )}
+          type="password"
           placeholder="********"
-          required
           {...register("password")}
         />
         <p className="text-red-500 text-sm">{errors.password?.message}</p>
       </div>
+
       <div className="space-y-2">
-        <button
+        <Button
           disabled={Object.keys(errors).length > 0 && !errors.root}
-          className="bg-black text-white py-2 px-4 rounded-md font-medium block w-full focus:outline-hidden focus:border-none focus:ring-2 focus:ring-black cursor-pointer"
+          className="w-full"
         >
           {formType === "login" ? "Login" : "Sign up"}
-        </button>
+        </Button>
+
         <p className="text-red-500 text-sm text-center">
           {errors.root?.message}
         </p>
