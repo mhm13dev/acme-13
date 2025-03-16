@@ -27,26 +27,17 @@ export const AuthForm: React.FC<Props> = ({ formType, onSubmitAction }) => {
   });
 
   const onSubmit = async (formData: AuthFormData) => {
-    try {
-      const response = await onSubmitAction(formData);
+    const response = await onSubmitAction(formData);
 
-      if (!response) {
-        // Indicates success from server action and redirects to specified page
-        return;
-      }
-
-      // There was an error
-      setError("root", {
-        message: response.message,
-      });
-    } catch (error) {
-      console.error(error);
-      setError("root", {
-        message: `Something went wrong while ${
-          formType === "login" ? "logging in" : "signing up"
-        }. Please try again.`,
-      });
+    if (!response) {
+      // Indicates success from server action and redirects to specified page
+      return;
     }
+
+    // There was an error
+    setError("root", {
+      message: response.message,
+    });
   };
 
   return (
