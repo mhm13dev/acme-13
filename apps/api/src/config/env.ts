@@ -1,6 +1,13 @@
-import "dotenv/config";
+import path from "node:path";
+import dotenv from "dotenv";
 import { z } from "zod";
 import ms from "ms";
+
+const projectRoot = path.resolve(process.cwd(), "../../.env");
+
+dotenv.config({
+  path: projectRoot,
+});
 
 const envSchema = z.object({
   // CORE
@@ -8,9 +15,6 @@ const envSchema = z.object({
     .enum(["development", "staging", "production"])
     .default("production"),
   PORT: z.coerce.number().default(5001),
-
-  // DATABASE
-  DATABASE_URL: z.string().trim(),
 
   // AUTH
   JWT_ALGORITHM: z.enum(["RS256"]).default("RS256"),

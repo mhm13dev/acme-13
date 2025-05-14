@@ -5,12 +5,12 @@ import cloneDeep from "clone-deep";
 import { ApiResponseCode } from "@repo/shared-lib/api-response";
 import type { IJwtPayload } from "@repo/shared-lib/api-response/users";
 import {
+  db,
   usersTable,
   type User,
   type UserWithoutSensitiveFields,
 } from "@repo/db";
 import { env } from "../../config/env.js";
-import { db } from "../../db/index.js";
 import { ApiError } from "../../utils/api-error.js";
 
 // Prepare JWT secret

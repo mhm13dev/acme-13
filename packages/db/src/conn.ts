@@ -1,6 +1,6 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 import { DbSchema } from "@repo/db";
-import { env } from "../config/env.js";
+import { env } from "./config/env.js";
 import { dbConfig } from "./db.config.js";
 
 /**

@@ -6,12 +6,23 @@
   "type": "module",
   "scripts": {
     "dev": "tsc --watch --preserveWatchOutput",
-    "build": "tsc"
+    "build": "tsc",
+    "db:drizzle-kit": "NODE_OPTIONS='--import tsx' drizzle-kit",
+    "db:generate": "pnpm run db:drizzle-kit generate --config ./src/drizzle.config.ts",
+    "db:migrate": "pnpm run db:drizzle-kit migrate --config ./src/drizzle.config.ts",
+    "db:studio": "pnpm run db:drizzle-kit studio --config ./src/drizzle.config.ts"
   },
   "dependencies": {
-    "drizzle-orm": "^0.38.4"
+    "dotenv": "^16.4.7",
+    "drizzle-orm": "^0.38.4",
+    "drizzle-seed": "^0.3.1",
+    "pg": "^8.14.0",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@types/pg": "^8.11.11",
+    "drizzle-kit": "^0.30.5",
+    "tsx": "^4.19.3",
     "typescript": "^5.8.2"
   },
   "exports": {

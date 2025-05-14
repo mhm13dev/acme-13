@@ -30,3 +30,5 @@ export {
 } from "./tables/locations.table.js";
 
 export { DbSchema, type DbTablesWithRelations } from "./db-schema.js";
+
+export { db } from "./conn.js";

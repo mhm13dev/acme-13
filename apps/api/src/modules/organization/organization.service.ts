@@ -1,12 +1,12 @@
 import { eq, getTableColumns } from "drizzle-orm";
 import { ApiResponseCode } from "@repo/shared-lib/api-response";
 import {
+  db,
   organizationsTable,
   orgMembersTable,
   type User,
   type Organization,
 } from "@repo/db";
-import { db } from "../../db/index.js";
 import { ApiError } from "../../utils/api-error.js";
 import { createOrgMember } from "../org-member/org-member.service.js";
 

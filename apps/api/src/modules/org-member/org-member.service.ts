@@ -2,6 +2,7 @@ import type { NodePgQueryResultHKT } from "drizzle-orm/node-postgres";
 import type { PgTransaction } from "drizzle-orm/pg-core";
 import { ApiResponseCode } from "@repo/shared-lib/api-response";
 import {
+  db,
   orgMembersTable,
   type User,
   type Organization,
@@ -9,7 +10,6 @@ import {
   type DbSchema,
   type DbTablesWithRelations,
 } from "@repo/db";
-import { db } from "../../db/index.js";
 import { ApiError } from "../../utils/api-error.js";
 
 /**
