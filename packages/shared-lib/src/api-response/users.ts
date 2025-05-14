@@ -1,5 +1,5 @@
 import type { JWTPayload } from "jose";
-import type { UserWithoutSensitiveFields } from "../db/index.js";
+import type { UserWithoutSensitiveFields } from "@repo/db";
 import type { ApiResponse } from "./index.js";
 
 export type SignupUserResponse = ApiResponse<{

@@ -1,5 +1,5 @@
 import { drizzle } from "drizzle-orm/node-postgres";
-import { DbSchema } from "@repo/shared-lib/db";
+import { DbSchema } from "@repo/db";
 import { env } from "../config/env.js";
 import { dbConfig } from "./db.config.js";
 

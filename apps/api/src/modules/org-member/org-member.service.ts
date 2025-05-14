@@ -8,7 +8,7 @@ import {
   type OrgMember,
   type DbSchema,
   type DbTablesWithRelations,
-} from "@repo/shared-lib/db";
+} from "@repo/db";
 import { db } from "../../db/index.js";
 import { ApiError } from "../../utils/api-error.js";
 

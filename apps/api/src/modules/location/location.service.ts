@@ -1,4 +1,4 @@
-import { locationsTable, type Location } from "@repo/shared-lib/db";
+import { locationsTable, type Location } from "@repo/db";
 import { db } from "../../db/index.js";
 import { mustBeOrgMember } from "../org-member/org-member.service.js";
 import { clientMustExist } from "../client/client.service.js";

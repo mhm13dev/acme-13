@@ -1,7 +1,7 @@
 import { createMiddleware } from "hono/factory";
 import { ApiResponseCode } from "@repo/shared-lib/api-response";
 import type { IJwtPayload } from "@repo/shared-lib/api-response/users";
-import type { UserWithoutSensitiveFields } from "@repo/shared-lib/db";
+import type { UserWithoutSensitiveFields } from "@repo/db";
 import { verifyAccessToken } from "../modules/user/user.service.js";
 import { ApiError } from "../utils/api-error.js";
 import type { HonoAppEnv } from "../app.js";

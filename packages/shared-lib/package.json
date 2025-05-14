@@ -9,16 +9,15 @@
     "build": "tsc"
   },
   "dependencies": {
-    "drizzle-orm": "^0.38.4",
     "jose": "^5.10.0",
-    "zod": "^3.24.2"
+    "zod": "^3.24.2",
+    "@repo/db": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.8.2"
   },
   "exports": {
     "./zod-schemas": "./dist/zod-schemas/index.js",
-    "./db": "./dist/db/index.js",
     "./api-response": "./dist/api-response/index.js",
     "./api-response/users": "./dist/api-response/users.js"
   }

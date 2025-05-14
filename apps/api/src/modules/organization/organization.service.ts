@@ -5,7 +5,7 @@ import {
   orgMembersTable,
   type User,
   type Organization,
-} from "@repo/shared-lib/db";
+} from "@repo/db";
 import { db } from "../../db/index.js";
 import { ApiError } from "../../utils/api-error.js";
 import { createOrgMember } from "../org-member/org-member.service.js";

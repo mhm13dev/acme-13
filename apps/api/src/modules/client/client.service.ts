@@ -6,7 +6,7 @@ import {
   type Client,
   type DbSchema,
   type DbTablesWithRelations,
-} from "@repo/shared-lib/db";
+} from "@repo/db";
 import { db } from "../../db/index.js";
 import { ApiError } from "../../utils/api-error.js";
 import { mustBeOrgMember } from "../org-member/org-member.service.js";

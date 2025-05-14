@@ -8,7 +8,7 @@ import {
   usersTable,
   type User,
   type UserWithoutSensitiveFields,
-} from "@repo/shared-lib/db";
+} from "@repo/db";
 import { env } from "../../config/env.js";
 import { db } from "../../db/index.js";
 import { ApiError } from "../../utils/api-error.js";

@@ -95,6 +95,9 @@ importers:
       '@hono/zod-validator':
         specifier: ^0.4.3
         version: 0.4.3(hono@4.7.4)(zod@3.24.2)
+      '@repo/db':
+        specifier: workspace:*
+        version: link:../../packages/db
       '@repo/shared-lib':
         specifier: workspace:*
         version: link:../../packages/shared-lib
@@ -154,11 +157,21 @@ importers:
         specifier: ^5.8.2
         version: 5.8.2
 
-  packages/shared-lib:
+  packages/db:
     dependencies:
       drizzle-orm:
         specifier: ^0.38.4
         version: 0.38.4(@types/pg@8.11.11)(@types/react@19.0.10)(pg@8.14.0)(react@19.0.0)
+    devDependencies:
+      typescript:
+        specifier: ^5.8.2
+        version: 5.8.2
+
+  packages/shared-lib:
+    dependencies:
+      '@repo/db':
+        specifier: workspace:*
+        version: link:../db
       jose:
         specifier: ^5.10.0
         version: 5.10.0
