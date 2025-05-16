@@ -1,8 +1,7 @@
 import React from "react";
 import Link from "next/link";
-
+import { authWrapper } from "@/app/(auth)/lib/auth-wrapper";
 import { AppRoutes } from "@/config/routes";
-import { authWrapper } from "@/lib/auth/auth-wrapper";
 import { AppWrapper } from "@/components/app-wrapper";
 import { TypographyH3 } from "@/components/ui/typography/h3";
 import { Button } from "@/components/ui/button";

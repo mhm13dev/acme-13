@@ -1,10 +1,12 @@
 import { Hono } from "hono";
+import { setCookie } from "hono/cookie";
 import { zValidator } from "@hono/zod-validator";
 import { authFormDataSchema } from "@repo/shared-lib/zod-schemas";
 import { ApiResponse, ApiResponseCode } from "@repo/shared-lib/api-response";
 import type { LoginUserResponse, MeResponse, SignupUserResponse } from "@repo/shared-lib/api-response/users";
 import { auth } from "../../middlewares/auth.middleware.js";
 import type { HonoAppEnv } from "../../app.js";
+import { env } from "../../config/env.js";
 import { loginUser, signupUser } from "./user.service.js";
 
 export const users = new Hono<HonoAppEnv>()
@@ -41,13 +43,22 @@ export const users = new Hono<HonoAppEnv>()
       password,
     });
 
+    // Set access token in cookie
+    setCookie(ctx, "accessToken", accessToken, {
+      path: "/",
+      httpOnly: true,
+      domain: env.BASE_DOMAIN,
+      secure: true,
+      sameSite: "Lax",
+      maxAge: env.ACCESS_TOKEN_EXPIRY,
+    });
+
     return ctx.json<LoginUserResponse>(
       new ApiResponse({
         response_code: ApiResponseCode.ok,
         message: "User logged in successfully",
         data: {
           user,
-          accessToken,
         },
       }),
       200

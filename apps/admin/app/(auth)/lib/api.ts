@@ -1,0 +1,44 @@
+import { AxiosError } from "axios";
+import { AuthFormData } from "@repo/shared-lib/zod-schemas";
+import { ApiResponse } from "@repo/shared-lib/api-response";
+import { LoginUserResponse, SignupUserResponse } from "@repo/shared-lib/api-response/users";
+import { envClient } from "@/config/env/client";
+import { axiosApi } from "@/lib/axios";
+
+/**
+ * Signup a user.
+ */
+export const signupUser = async (authFormData: AuthFormData): Promise<ApiResponse> => {
+  try {
+    await axiosApi.post<SignupUserResponse>(`${envClient.NEXT_PUBLIC_API_URL}/users/signup`, authFormData);
+    return await loginUser(authFormData);
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      return error.response?.data;
+    }
+    return {
+      message: "Something went wrong",
+      response_code: "internal_server_error",
+      data: null,
+    };
+  }
+};
+
+/**
+ * Login a user.
+ */
+export const loginUser = async (authFormData: AuthFormData): Promise<ApiResponse> => {
+  try {
+    const response = await axiosApi.post<LoginUserResponse>("/users/login", authFormData);
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      return error.response?.data;
+    }
+    return {
+      message: "Something went wrong",
+      response_code: "internal_server_error",
+      data: null,
+    };
+  }
+};

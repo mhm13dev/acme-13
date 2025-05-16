@@ -1,7 +1,7 @@
 import React from "react";
 import type { IJwtPayload } from "@repo/shared-lib/api-response/users";
+import { authWrapper } from "@/app/(auth)/lib/auth-wrapper";
 import { AppRoutes } from "@/config/routes";
-import { authWrapper } from "@/lib/auth/auth-wrapper";
 import { AppWrapper } from "@/components/app-wrapper";
 
 function HomePage({ authUser }: { authUser: IJwtPayload }) {

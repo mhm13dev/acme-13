@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { cors } from "hono/cors";
 import type { Variables } from "hono/types";
 import type { HttpBindings } from "@hono/node-server";
 import { ApiResponse, ApiResponseCode } from "@repo/shared-lib/api-response";
@@ -15,6 +16,13 @@ export interface HonoAppEnv {
 }
 
 export const app = new Hono<HonoAppEnv>()
+  .use(
+    "*",
+    cors({
+      origin: env.CORS_ORIGINS,
+      credentials: true,
+    })
+  )
   .get("/", async (c) => {
     return c.json(
       new ApiResponse({

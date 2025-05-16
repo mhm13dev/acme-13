@@ -1,22 +1,27 @@
 "use client";
 import React, { useId } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { authFormDataSchema, type AuthFormData } from "@repo/shared-lib/zod-schemas";
-import { ApiResponse } from "@repo/shared-lib/api-response";
-
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { AppRoutes } from "@/config/routes";
+import { loginUser, signupUser } from "../lib/api";
 import { FormType } from "./auth.types";
+
+const submitActions = {
+  login: loginUser,
+  signup: signupUser,
+} as const;
 
 interface Props {
   formType: FormType;
-  onSubmitAction: (formData: AuthFormData) => Promise<ApiResponse | void>;
 }
 
-export const AuthForm: React.FC<Props> = ({ formType, onSubmitAction }) => {
+export const AuthForm: React.FC<Props> = ({ formType }) => {
+  const router = useRouter();
   const authFormId = useId();
   const {
     register,
@@ -28,17 +33,17 @@ export const AuthForm: React.FC<Props> = ({ formType, onSubmitAction }) => {
   });
 
   const onSubmit = async (formData: AuthFormData) => {
-    const response = await onSubmitAction(formData);
+    const submitAction = submitActions[formType];
 
-    if (!response) {
-      // Indicates success from server action and redirects to specified page
-      return;
+    const response = await submitAction(formData);
+
+    if (response.response_code === "ok") {
+      router.push(AppRoutes.selectOrganization.path);
+    } else {
+      setError("root", {
+        message: response.message,
+      });
     }
-
-    // There was an error
-    setError("root", {
-      message: response.message,
-    });
   };
 
   return (
@@ -56,7 +61,7 @@ export const AuthForm: React.FC<Props> = ({ formType, onSubmitAction }) => {
       </div>
 
       <div className="space-y-2">
-        <Button disabled={Object.keys(errors).length > 0 && !errors.root} className="w-full">
+        <Button type="submit" disabled={Object.keys(errors).length > 0 && !errors.root} className="w-full">
           {formType === "login" ? "Login" : "Sign up"}
         </Button>
 

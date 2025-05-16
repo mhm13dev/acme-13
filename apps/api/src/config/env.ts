@@ -13,6 +13,12 @@ const envSchema = z.object({
   // CORE
   APP_ENV: z.enum(["development", "staging", "production"]).default("production"),
   PORT: z.coerce.number().default(5001),
+  BASE_DOMAIN: z.string().trim().default("localhost"),
+  CORS_ORIGINS: z
+    .string()
+    .trim()
+    .default("http://localhost:3000")
+    .transform((val) => val.split(",")),
 
   // AUTH
   JWT_ALGORITHM: z.enum(["RS256"]).default("RS256"),

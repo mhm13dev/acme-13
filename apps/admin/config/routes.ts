@@ -1,4 +1,4 @@
-import { AuthWrapperType } from "@/lib/auth/constants";
+import { AuthWrapperType } from "@/app/(auth)/lib/constants";
 
 export const AppRoutes = {
   auth: {
