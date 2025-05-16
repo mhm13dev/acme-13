@@ -146,7 +146,7 @@ importers:
         version: 2.1.0
       '@types/node':
         specifier: ^22.13.10
-        version: 22.13.10
+        version: 22.15.18
       '@types/pg':
         specifier: ^8.11.11
         version: 8.11.11
@@ -230,9 +230,24 @@ importers:
         specifier: ^3.24.2
         version: 3.24.2
     devDependencies:
+      '@eslint/js':
+        specifier: ^9.27.0
+        version: 9.27.0
+      eslint:
+        specifier: ^9.22.0
+        version: 9.22.0(jiti@2.4.2)
+      eslint-config-prettier:
+        specifier: ^10.1.5
+        version: 10.1.5(eslint@9.22.0(jiti@2.4.2))
+      prettier:
+        specifier: 3.5.3
+        version: 3.5.3
       typescript:
         specifier: ^5.8.2
         version: 5.8.2
+      typescript-eslint:
+        specifier: ^8.32.1
+        version: 8.32.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.8.2)
 
 packages:
 
@@ -1151,9 +1166,6 @@ packages:
 
   '@types/node@20.17.24':
     resolution: {integrity: sha512-d7fGCyB96w9BnWQrOsJtpyiSaBcAYYr75bnK6ZRjDbql2cGLj/3GsL5OYmLPNq76l7Gf2q4Rv9J2o6h5CrD9sA==}
-
-  '@types/node@22.13.10':
-    resolution: {integrity: sha512-I6LPUvlRH+O6VRUqYOcMudhaIdUVWfsjnZavnsraHvpBwaEyMN29ry+0UVJhImYL16xsscu0aske3yA+uPOWfw==}
 
   '@types/node@22.15.18':
     resolution: {integrity: sha512-v1DKRfUdyW+jJhZNEI1PYy29S2YRxMV5AOO/x/SjKmW0acCIOqmbj6Haf9eHAhsPmrhlHSxEhv/1WszcLWV4cg==}
@@ -2735,9 +2747,6 @@ packages:
   undici-types@6.19.8:
     resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
 
-  undici-types@6.20.0:
-    resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
-
   undici-types@6.21.0:
     resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
 
@@ -3385,10 +3394,6 @@ snapshots:
   '@types/node@20.17.24':
     dependencies:
       undici-types: 6.19.8
-
-  '@types/node@22.13.10':
-    dependencies:
-      undici-types: 6.20.0
 
   '@types/node@22.15.18':
     dependencies:
@@ -5245,8 +5250,6 @@ snapshots:
       which-boxed-primitive: 1.1.1
 
   undici-types@6.19.8: {}
-
-  undici-types@6.20.0: {}
 
   undici-types@6.21.0: {}
 

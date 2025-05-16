@@ -6,15 +6,22 @@
   "type": "module",
   "scripts": {
     "dev": "tsc --watch --preserveWatchOutput",
-    "build": "tsc"
+    "build": "tsc",
+    "lint": "eslint src --fix",
+    "format": "prettier --write ."
   },
   "dependencies": {
+    "@repo/db": "workspace:*",
     "jose": "^5.10.0",
-    "zod": "^3.24.2",
-    "@repo/db": "workspace:*"
+    "zod": "^3.24.2"
   },
   "devDependencies": {
-    "typescript": "^5.8.2"
+    "@eslint/js": "^9.27.0",
+    "eslint": "^9.22.0",
+    "eslint-config-prettier": "^10.1.5",
+    "prettier": "3.5.3",
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.32.1"
   },
   "exports": {
     "./zod-schemas": "./dist/zod-schemas/index.js",

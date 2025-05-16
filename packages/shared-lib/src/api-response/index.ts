@@ -9,8 +9,7 @@ export const ApiResponseCode = {
   forbidden: "forbidden",
 } as const;
 
-export type ApiResponseCode =
-  (typeof ApiResponseCode)[keyof typeof ApiResponseCode];
+export type ApiResponseCode = (typeof ApiResponseCode)[keyof typeof ApiResponseCode];
 
 interface IApiResponseParams<T> {
   response_code: ApiResponseCode;
