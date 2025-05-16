@@ -8,9 +8,7 @@ import { loginUser } from "../login/actions";
 /**
  * Signup a user.
  */
-export const signupUser = async (
-  authFormData: AuthFormData
-): Promise<ApiResponse | void> => {
+export const signupUser = async (authFormData: AuthFormData): Promise<ApiResponse | void> => {
   const response = await fetch(`${env.NEXT_PUBLIC_API_URL}/users/signup`, {
     method: "POST",
     body: JSON.stringify(authFormData),

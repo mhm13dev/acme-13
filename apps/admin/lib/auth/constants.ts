@@ -5,5 +5,4 @@ export const AuthWrapperType = {
   publicOnly: "public-only",
 } as const;
 
-export type AuthWrapperType =
-  (typeof AuthWrapperType)[keyof typeof AuthWrapperType];
+export type AuthWrapperType = (typeof AuthWrapperType)[keyof typeof AuthWrapperType];

@@ -13,9 +13,7 @@ import { ACCESS_TOKEN_COOKIE } from "@/lib/auth/constants";
 /**
  * Login a user.
  */
-export const loginUser = async (
-  authFormData: AuthFormData
-): Promise<ApiResponse | void> => {
+export const loginUser = async (authFormData: AuthFormData): Promise<ApiResponse | void> => {
   const response = await fetch(`${env.NEXT_PUBLIC_API_URL}/users/login`, {
     method: "POST",
     body: JSON.stringify(authFormData),

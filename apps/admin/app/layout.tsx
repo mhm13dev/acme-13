@@ -20,9 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn(inter.variable, "font-inter antialiased")}>
-        {children}
-      </body>
+      <body className={cn(inter.variable, "font-inter antialiased")}>{children}</body>
     </html>
   );
 }

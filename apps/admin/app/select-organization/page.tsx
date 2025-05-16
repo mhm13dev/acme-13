@@ -14,9 +14,7 @@ function SelectOrganizationPage() {
         <section className="border rounded-md max-w-lg w-full bg-background p-8">
           {organizations.length > 0 && (
             <>
-              <TypographyH3 className="text-center">
-                Select Organization
-              </TypographyH3>
+              <TypographyH3 className="text-center">Select Organization</TypographyH3>
               <div className="border rounded-md mt-4 overflow-hidden">
                 {organizations.map((organization) => (
                   <Link
@@ -25,9 +23,7 @@ function SelectOrganizationPage() {
                     className="flex items-center justify-between border-b last:border-b-0 p-3 hover:bg-muted focus:bg-muted focus:outline-hidden text-sm"
                   >
                     <span className="font-medium">{organization.name}</span>
-                    <span className="text-muted-foreground font-normal">
-                      {organization.id}
-                    </span>
+                    <span className="text-muted-foreground font-normal">{organization.id}</span>
                   </Link>
                 ))}
               </div>
@@ -55,10 +51,7 @@ function SelectOrganizationPage() {
   );
 }
 
-export default authWrapper(
-  SelectOrganizationPage,
-  AppRoutes.selectOrganization.auth
-);
+export default authWrapper(SelectOrganizationPage, AppRoutes.selectOrganization.auth);
 
 const organizations = [
   {

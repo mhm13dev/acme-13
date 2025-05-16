@@ -3,10 +3,7 @@ import React, { useId } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import {
-  authFormDataSchema,
-  type AuthFormData,
-} from "@repo/shared-lib/zod-schemas";
+import { authFormDataSchema, type AuthFormData } from "@repo/shared-lib/zod-schemas";
 import { ApiResponse } from "@repo/shared-lib/api-response";
 
 import { Button } from "@/components/ui/button";
@@ -48,37 +45,22 @@ export const AuthForm: React.FC<Props> = ({ formType, onSubmitAction }) => {
     <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
       <div className="space-y-2">
         <Label htmlFor={`email-${authFormId}`}>Email</Label>
-        <Input
-          id={`email-${authFormId}`}
-          type="email"
-          placeholder="johndoe@example.com"
-          {...register("email")}
-        />
+        <Input id={`email-${authFormId}`} type="email" placeholder="johndoe@example.com" {...register("email")} />
         <p className="text-red-500 text-sm">{errors.email?.message}</p>
       </div>
 
       <div className="space-y-2">
         <Label htmlFor={`password-${authFormId}`}>Password</Label>
-        <Input
-          id={`password-${authFormId}`}
-          type="password"
-          placeholder="********"
-          {...register("password")}
-        />
+        <Input id={`password-${authFormId}`} type="password" placeholder="********" {...register("password")} />
         <p className="text-red-500 text-sm">{errors.password?.message}</p>
       </div>
 
       <div className="space-y-2">
-        <Button
-          disabled={Object.keys(errors).length > 0 && !errors.root}
-          className="w-full"
-        >
+        <Button disabled={Object.keys(errors).length > 0 && !errors.root} className="w-full">
           {formType === "login" ? "Login" : "Sign up"}
         </Button>
 
-        <p className="text-red-500 text-sm text-center">
-          {errors.root?.message}
-        </p>
+        <p className="text-red-500 text-sm text-center">{errors.root?.message}</p>
       </div>
     </form>
   );
