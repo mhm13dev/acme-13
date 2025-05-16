@@ -11,8 +11,7 @@
     "db:generate": "pnpm run db:drizzle-kit generate --config ./src/drizzle.config.ts",
     "db:migrate": "pnpm run db:drizzle-kit migrate --config ./src/drizzle.config.ts",
     "db:studio": "pnpm run db:drizzle-kit studio --config ./src/drizzle.config.ts",
-    "lint": "eslint src --fix",
-    "format": "prettier --write ."
+    "lint": "eslint src --fix"
   },
   "dependencies": {
     "dotenv": "^16.4.7",
@@ -27,7 +26,6 @@
     "drizzle-kit": "^0.30.5",
     "eslint": "^9.22.0",
     "eslint-config-prettier": "^10.1.5",
-    "prettier": "3.5.3",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.32.1"

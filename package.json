@@ -6,6 +6,10 @@
   "scripts": {
     "dev": "pnpm -r --parallel dev",
     "build": "pnpm -r run build",
-    "start": "pnpm -r run start"
+    "start": "pnpm -r run start",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "prettier": "3.5.3"
   }
 }

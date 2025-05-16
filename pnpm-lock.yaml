@@ -6,7 +6,11 @@ settings:
 
 importers:
 
-  .: {}
+  .:
+    devDependencies:
+      prettier:
+        specifier: 3.5.3
+        version: 3.5.3
 
   apps/admin:
     dependencies:
@@ -83,9 +87,6 @@ importers:
       eslint-config-prettier:
         specifier: ^10.1.5
         version: 10.1.5(eslint@9.22.0(jiti@2.4.2))
-      prettier:
-        specifier: 3.5.3
-        version: 3.5.3
       tailwindcss:
         specifier: ^4.0.14
         version: 4.0.14
@@ -165,9 +166,6 @@ importers:
       eslint-config-prettier:
         specifier: ^10.1.5
         version: 10.1.5(eslint@9.22.0(jiti@2.4.2))
-      prettier:
-        specifier: 3.5.3
-        version: 3.5.3
       tsx:
         specifier: ^4.19.3
         version: 4.19.3
@@ -211,9 +209,6 @@ importers:
       eslint-config-prettier:
         specifier: ^10.1.5
         version: 10.1.5(eslint@9.22.0(jiti@2.4.2))
-      prettier:
-        specifier: 3.5.3
-        version: 3.5.3
       tsx:
         specifier: ^4.19.3
         version: 4.19.3
@@ -245,9 +240,6 @@ importers:
       eslint-config-prettier:
         specifier: ^10.1.5
         version: 10.1.5(eslint@9.22.0(jiti@2.4.2))
-      prettier:
-        specifier: 3.5.3
-        version: 3.5.3
       typescript:
         specifier: ^5.8.2
         version: 5.8.2
