@@ -4,32 +4,18 @@ import * as jose from "jose";
 import cloneDeep from "clone-deep";
 import { ApiResponseCode } from "@repo/shared-lib/api-response";
 import type { IJwtPayload } from "@repo/shared-lib/api-response/users";
-import {
-  db,
-  usersTable,
-  type User,
-  type UserWithoutSensitiveFields,
-} from "@repo/db";
+import { db, usersTable, type User, type UserWithoutSensitiveFields } from "@repo/db";
 import { env } from "../../config/env.js";
 import { ApiError } from "../../utils/api-error.js";
 
 // Prepare JWT secret
-const accessTokenPrivateKey = await jose.importPKCS8(
-  env.ACCESS_TOKEN_PRIVATE_KEY_PEM,
-  env.JWT_ALGORITHM
-);
-const accessTokenPublicKey = await jose.importSPKI(
-  env.ACCESS_TOKEN_PUBLIC_KEY_PEM,
-  env.JWT_ALGORITHM
-);
+const accessTokenPrivateKey = await jose.importPKCS8(env.ACCESS_TOKEN_PRIVATE_KEY_PEM, env.JWT_ALGORITHM);
+const accessTokenPublicKey = await jose.importSPKI(env.ACCESS_TOKEN_PUBLIC_KEY_PEM, env.JWT_ALGORITHM);
 
 /**
  * Signup a new user
  */
-export async function signupUser(params: {
-  email: string;
-  password: string;
-}): Promise<UserWithoutSensitiveFields> {
+export async function signupUser(params: { email: string; password: string }): Promise<UserWithoutSensitiveFields> {
   const { email, password } = params;
 
   // Check if user already exists
@@ -62,10 +48,7 @@ export async function signupUser(params: {
 /**
  * Login a user
  */
-export async function loginUser(params: {
-  email: string;
-  password: string;
-}): Promise<{
+export async function loginUser(params: { email: string; password: string }): Promise<{
   user: UserWithoutSensitiveFields;
   accessToken: string;
 }> {
@@ -80,11 +63,7 @@ export async function loginUser(params: {
     .then((rows) => rows[0]);
 
   if (!user || !(await argon2.verify(user.password, password))) {
-    throw new ApiError(
-      ApiResponseCode.resource_not_found,
-      "User not found",
-      404
-    );
+    throw new ApiError(ApiResponseCode.resource_not_found, "User not found", 404);
   }
 
   // Generate access token
@@ -96,9 +75,7 @@ export async function loginUser(params: {
 /**
  * Generate access token
  */
-async function generateAccessToken(params: {
-  user: Pick<User, "id" | "email">;
-}): Promise<{ accessToken: string }> {
+async function generateAccessToken(params: { user: Pick<User, "id" | "email"> }): Promise<{ accessToken: string }> {
   const { user } = params;
 
   const payload: IJwtPayload = {
@@ -106,8 +83,7 @@ async function generateAccessToken(params: {
     email: user.email,
   };
 
-  const accessTokenExpiresAt =
-    Math.floor(Date.now() / 1000) + env.ACCESS_TOKEN_EXPIRY;
+  const accessTokenExpiresAt = Math.floor(Date.now() / 1000) + env.ACCESS_TOKEN_EXPIRY;
 
   const accessToken = await new jose.SignJWT(payload)
     .setProtectedHeader({ alg: env.JWT_ALGORITHM })
@@ -121,21 +97,11 @@ async function generateAccessToken(params: {
 /**
  * Load user function for `auth` middleware
  */
-export async function loadUser(
-  userId: number
-): Promise<UserWithoutSensitiveFields> {
-  const [user] = await db
-    .select()
-    .from(usersTable)
-    .where(eq(usersTable.id, userId))
-    .execute();
+export async function loadUser(userId: number): Promise<UserWithoutSensitiveFields> {
+  const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId)).execute();
 
   if (!user) {
-    throw new ApiError(
-      ApiResponseCode.resource_not_found,
-      "User not found",
-      404
-    );
+    throw new ApiError(ApiResponseCode.resource_not_found, "User not found", 404);
   }
 
   return omitSensitiveUserFields(user);
@@ -149,24 +115,16 @@ export async function verifyAccessToken(token: string): Promise<{
   jwtPayload: IJwtPayload;
 }> {
   try {
-    const { payload } = await jose.jwtVerify<IJwtPayload>(
-      token,
-      accessTokenPublicKey,
-      {
-        algorithms: [env.JWT_ALGORITHM],
-      }
-    );
+    const { payload } = await jose.jwtVerify<IJwtPayload>(token, accessTokenPublicKey, {
+      algorithms: [env.JWT_ALGORITHM],
+    });
     return {
       // Get user from database on demand
       loadUser: () => loadUser(Number(payload.sub)),
       jwtPayload: payload,
     };
-  } catch (error) {
-    throw new ApiError(
-      ApiResponseCode.unauthorized,
-      "Invalid access token. Please login again.",
-      401
-    );
+  } catch {
+    throw new ApiError(ApiResponseCode.unauthorized, "Invalid access token. Please login again.", 401);
   }
 }
 

@@ -48,8 +48,7 @@ export async function findOrgMember(params: {
   // Find OrgMember record from database
   const orgMember = await (tx ?? db).query.orgMembersTable
     .findFirst({
-      where: (table, { and, eq }) =>
-        and(eq(table.userId, userId), eq(table.orgId, orgId)),
+      where: (table, { and, eq }) => and(eq(table.userId, userId), eq(table.orgId, orgId)),
     })
     .execute();
 
@@ -71,11 +70,7 @@ export async function mustBeOrgMember(params: {
   const orgMember = await findOrgMember({ userId, orgId, tx });
 
   if (!orgMember) {
-    throw new ApiError(
-      ApiResponseCode.forbidden,
-      "User is not a member of the organization",
-      403
-    );
+    throw new ApiError(ApiResponseCode.forbidden, "User is not a member of the organization", 403);
   }
 
   return orgMember;

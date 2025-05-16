@@ -58,10 +58,7 @@ export const app = new Hono<HonoAppEnv>()
     return c.json(
       new ApiResponse({
         response_code: ApiResponseCode.internal_server_error,
-        message:
-          env.APP_ENV === "production"
-            ? "Internal server error"
-            : error.message ?? "Internal server error",
+        message: env.APP_ENV === "production" ? "Internal server error" : (error.message ?? "Internal server error"),
       }),
       500
     );

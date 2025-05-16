@@ -2,11 +2,7 @@ import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { authFormDataSchema } from "@repo/shared-lib/zod-schemas";
 import { ApiResponse, ApiResponseCode } from "@repo/shared-lib/api-response";
-import type {
-  LoginUserResponse,
-  MeResponse,
-  SignupUserResponse,
-} from "@repo/shared-lib/api-response/users";
+import type { LoginUserResponse, MeResponse, SignupUserResponse } from "@repo/shared-lib/api-response/users";
 import { auth } from "../../middlewares/auth.middleware.js";
 import type { HonoAppEnv } from "../../app.js";
 import { loginUser, signupUser } from "./user.service.js";

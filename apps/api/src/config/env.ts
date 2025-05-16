@@ -11,9 +11,7 @@ dotenv.config({
 
 const envSchema = z.object({
   // CORE
-  APP_ENV: z
-    .enum(["development", "staging", "production"])
-    .default("production"),
+  APP_ENV: z.enum(["development", "staging", "production"]).default("production"),
   PORT: z.coerce.number().default(5001),
 
   // AUTH

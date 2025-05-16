@@ -4,10 +4,7 @@ import { ApiResponse, ApiResponseCode } from "@repo/shared-lib/api-response";
 import { auth } from "../../middlewares/auth.middleware.js";
 import type { HonoAppEnv } from "../../app.js";
 import { paginationSchema } from "../../common/common.schema.js";
-import {
-  clientsBaseParamsSchema,
-  createClientSchema,
-} from "./client.schema.js";
+import { clientsBaseParamsSchema, createClientSchema } from "./client.schema.js";
 import { createClient, getOrganizationClients } from "./client.service.js";
 
 export const clients = new Hono<HonoAppEnv>()
@@ -16,60 +13,50 @@ export const clients = new Hono<HonoAppEnv>()
   /**
    * Create a new Client
    */
-  .post(
-    "/",
-    zValidator("param", clientsBaseParamsSchema),
-    zValidator("json", createClientSchema),
-    async (ctx) => {
-      const { userId } = ctx.get("tokenPayload");
-      const { orgId } = ctx.req.valid("param");
-      const { name } = ctx.req.valid("json");
+  .post("/", zValidator("param", clientsBaseParamsSchema), zValidator("json", createClientSchema), async (ctx) => {
+    const { userId } = ctx.get("tokenPayload");
+    const { orgId } = ctx.req.valid("param");
+    const { name } = ctx.req.valid("json");
 
-      const client = await createClient({
-        name,
-        orgId,
-        userId,
-      });
+    const client = await createClient({
+      name,
+      orgId,
+      userId,
+    });
 
-      return ctx.json(
-        new ApiResponse({
-          response_code: ApiResponseCode.ok,
-          message: "Client created successfully",
-          data: {
-            client,
-          },
-        }),
-        201
-      );
-    }
-  )
+    return ctx.json(
+      new ApiResponse({
+        response_code: ApiResponseCode.ok,
+        message: "Client created successfully",
+        data: {
+          client,
+        },
+      }),
+      201
+    );
+  })
   /**
    * Get Organization's Clients
    */
-  .get(
-    "/",
-    zValidator("param", clientsBaseParamsSchema),
-    zValidator("query", paginationSchema),
-    async (ctx) => {
-      const { userId } = ctx.get("tokenPayload");
-      const { orgId } = ctx.req.valid("param");
-      const { limit, offset } = ctx.req.valid("query");
+  .get("/", zValidator("param", clientsBaseParamsSchema), zValidator("query", paginationSchema), async (ctx) => {
+    const { userId } = ctx.get("tokenPayload");
+    const { orgId } = ctx.req.valid("param");
+    const { limit, offset } = ctx.req.valid("query");
 
-      const clients = await getOrganizationClients({
-        orgId,
-        userId,
-        limit,
-        offset,
-      });
+    const clients = await getOrganizationClients({
+      orgId,
+      userId,
+      limit,
+      offset,
+    });
 
-      return ctx.json(
-        new ApiResponse({
-          response_code: ApiResponseCode.ok,
-          message: "Clients fetched successfully",
-          data: {
-            clients,
-          },
-        })
-      );
-    }
-  );
+    return ctx.json(
+      new ApiResponse({
+        response_code: ApiResponseCode.ok,
+        message: "Clients fetched successfully",
+        data: {
+          clients,
+        },
+      })
+    );
+  });

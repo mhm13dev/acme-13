@@ -32,11 +32,7 @@ export const auth = createMiddleware<AuthMiddlewareEnv>(async (ctx, next) => {
     const token = ctx.req.header("Authorization")?.split("Bearer ")[1]?.trim();
 
     if (!token) {
-      throw new ApiError(
-        ApiResponseCode.access_token_required,
-        "Access token is required",
-        401
-      );
+      throw new ApiError(ApiResponseCode.access_token_required, "Access token is required", 401);
     }
 
     // Verify the access token

@@ -1,12 +1,6 @@
 import { eq, getTableColumns } from "drizzle-orm";
 import { ApiResponseCode } from "@repo/shared-lib/api-response";
-import {
-  db,
-  organizationsTable,
-  orgMembersTable,
-  type User,
-  type Organization,
-} from "@repo/db";
+import { db, organizationsTable, orgMembersTable, type User, type Organization } from "@repo/db";
 import { ApiError } from "../../utils/api-error.js";
 import { createOrgMember } from "../org-member/org-member.service.js";
 
@@ -31,11 +25,7 @@ export async function createOrganization(params: {
       .execute();
 
     if (existingOrganization) {
-      throw new ApiError(
-        ApiResponseCode.conflict,
-        "Organization with the same slug already exists",
-        409
-      );
+      throw new ApiError(ApiResponseCode.conflict, "Organization with the same slug already exists", 409);
     }
 
     // Insert organization into database
@@ -65,9 +55,7 @@ export async function createOrganization(params: {
 /**
  * Get Organizations in which the User is a member
  */
-export async function getOrganizationsForMember(params: {
-  userId: number;
-}): Promise<Organization[]> {
+export async function getOrganizationsForMember(params: { userId: number }): Promise<Organization[]> {
   const { userId } = params;
 
   const organizations = await db

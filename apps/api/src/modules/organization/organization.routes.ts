@@ -4,10 +4,7 @@ import { ApiResponse, ApiResponseCode } from "@repo/shared-lib/api-response";
 import { auth } from "../../middlewares/auth.middleware.js";
 import type { HonoAppEnv } from "../../app.js";
 import { createOrganizationSchema } from "./organization.schema.js";
-import {
-  createOrganization,
-  getOrganizationsForMember,
-} from "./organization.service.js";
+import { createOrganization, getOrganizationsForMember } from "./organization.service.js";
 
 export const organizations = new Hono<HonoAppEnv>()
   .basePath("/organizations")

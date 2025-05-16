@@ -1,24 +1,14 @@
 import type { PgTransaction } from "drizzle-orm/pg-core";
 import type { NodePgQueryResultHKT } from "drizzle-orm/node-postgres";
 import { ApiResponseCode } from "@repo/shared-lib/api-response";
-import {
-  db,
-  clientsTable,
-  type Client,
-  type DbSchema,
-  type DbTablesWithRelations,
-} from "@repo/db";
+import { db, clientsTable, type Client, type DbSchema, type DbTablesWithRelations } from "@repo/db";
 import { ApiError } from "../../utils/api-error.js";
 import { mustBeOrgMember } from "../org-member/org-member.service.js";
 
 /**
  * Create a new Client
  */
-export async function createClient(params: {
-  name: string;
-  orgId: number;
-  userId: number;
-}): Promise<Client> {
+export async function createClient(params: { name: string; orgId: number; userId: number }): Promise<Client> {
   const { name, orgId, userId } = params;
 
   // Start a transaction
@@ -85,8 +75,7 @@ export async function findClient(params: {
 
   // Find Client record from database
   const client = await (tx ?? db).query.clientsTable.findFirst({
-    where: (table, { and, eq }) =>
-      and(eq(table.id, id), eq(table.orgId, orgId)),
+    where: (table, { and, eq }) => and(eq(table.id, id), eq(table.orgId, orgId)),
   });
 
   return client;
@@ -106,11 +95,7 @@ export async function clientMustExist(params: {
   const client = await findClient({ id: clientId, orgId, tx });
 
   if (!client) {
-    throw new ApiError(
-      ApiResponseCode.resource_not_found,
-      "Client not found",
-      404
-    );
+    throw new ApiError(ApiResponseCode.resource_not_found, "Client not found", 404);
   }
 
   return client;
