@@ -17,14 +17,11 @@ export const organizationsTable = pgTable("organizations", {
 
 export type Organization = typeof organizationsTable.$inferSelect;
 
-export const organizationsRelations = relations(
-  organizationsTable,
-  ({ one, many }) => ({
-    owner: one(usersTable, {
-      fields: [organizationsTable.ownerId],
-      references: [usersTable.id],
-    }),
-    orgMembers: many(orgMembersTable),
-    clients: many(clientsTable),
-  })
-);
+export const organizationsRelations = relations(organizationsTable, ({ one, many }) => ({
+  owner: one(usersTable, {
+    fields: [organizationsTable.ownerId],
+    references: [usersTable.id],
+  }),
+  orgMembers: many(orgMembersTable),
+  clients: many(clientsTable),
+}));

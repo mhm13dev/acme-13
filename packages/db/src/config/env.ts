@@ -10,9 +10,7 @@ dotenv.config({
 
 const envSchema = z.object({
   // CORE
-  APP_ENV: z
-    .enum(["development", "staging", "production"])
-    .default("production"),
+  APP_ENV: z.enum(["development", "staging", "production"]).default("production"),
 
   // DATABASE
   DATABASE_URL: z.string().trim(),
