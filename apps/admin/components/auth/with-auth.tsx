@@ -4,10 +4,10 @@ import { authenticateUser } from "@/lib/api/authenticate-user";
 
 export function withAuth<P extends object>(Component: React.FC<P>) {
   return async function WithAuthComponent(props: P) {
-    const authUser = await authenticateUser();
-    if (!authUser) {
+    const authData = await authenticateUser();
+    if (!authData) {
       redirect(AppRoutes.auth.login.path);
     }
-    return <Component {...props} authUser={authUser} />;
+    return <Component {...props} authData={authData} />;
   };
 }

@@ -4,9 +4,9 @@ import { authenticateUser } from "@/lib/api/authenticate-user";
 
 export function publicOnly<P extends object>(Component: React.FC<P>) {
   return async function PublicOnlyComponent(props: P) {
-    const authUser = await authenticateUser();
-    if (authUser) {
-      redirect(AppRoutes.selectOrganization.path);
+    const authData = await authenticateUser();
+    if (authData) {
+      redirect(AppRoutes.organization.select.path);
     }
     return <Component {...props} />;
   };
