@@ -1,8 +1,8 @@
 import { withAuth } from "./with-auth";
 import { publicOnly } from "./public-only";
-import { type AuthWrapperType } from "./constants";
+import { type AuthWrapperType } from "./types";
 
-export function authWrapper<P extends object>(Component: React.FC<P>, wrapperType: AuthWrapperType) {
+export function AuthWrapper<P extends object>(Component: React.FC<P>, wrapperType: AuthWrapperType) {
   return async function AuthWrapperComponent(props: P) {
     switch (wrapperType) {
       case "with-auth":

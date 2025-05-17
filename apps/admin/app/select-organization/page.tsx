@@ -1,8 +1,8 @@
 import React from "react";
 import Link from "next/link";
-import { authWrapper } from "@/app/(auth)/lib/auth-wrapper";
 import { AppRoutes } from "@/config/routes";
 import { AppWrapper } from "@/components/app-wrapper";
+import { AuthWrapper } from "@/components/auth/wrapper";
 import { TypographyH3 } from "@/components/ui/typography/h3";
 import { Button } from "@/components/ui/button";
 
@@ -50,7 +50,7 @@ function SelectOrganizationPage() {
   );
 }
 
-export default authWrapper(SelectOrganizationPage, AppRoutes.selectOrganization.auth);
+export default AuthWrapper(SelectOrganizationPage, AppRoutes.selectOrganization.auth);
 
 const organizations = [
   {

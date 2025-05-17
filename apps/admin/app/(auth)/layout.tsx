@@ -1,5 +1,4 @@
 import React from "react";
-
 import { AppWrapper } from "@/components/app-wrapper";
 
 interface Props {

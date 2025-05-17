@@ -8,8 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { AppRoutes } from "@/config/routes";
-import { loginUser, signupUser } from "../lib/api";
-import { FormType } from "./auth.types";
+import { loginUser, signupUser } from "@/lib/api/auth";
+import { FormType } from "./types";
 
 const submitActions = {
   login: loginUser,

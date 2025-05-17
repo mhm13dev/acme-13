@@ -1,9 +1,7 @@
 import React from "react";
 import Link from "next/link";
-
 import { Button } from "@/components/ui/button";
-
-import { FormType } from "./auth.types";
+import { FormType } from "./types";
 
 interface Props {
   formType: FormType;

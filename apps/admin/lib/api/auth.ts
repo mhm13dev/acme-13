@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
-import { AuthFormData } from "@repo/shared-lib/zod-schemas";
-import { ApiResponse } from "@repo/shared-lib/api-response";
-import { LoginUserResponse, SignupUserResponse } from "@repo/shared-lib/api-response/users";
+import { type AuthFormData } from "@repo/shared-lib/zod-schemas";
+import { type ApiResponse } from "@repo/shared-lib/api-response";
+import { type LoginUserResponse, type SignupUserResponse } from "@repo/shared-lib/api-response/users";
 import { axiosApi } from "@/lib/axios";
 
 /**

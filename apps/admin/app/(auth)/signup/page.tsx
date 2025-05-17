@@ -1,6 +1,6 @@
 import React from "react";
-import { authWrapper } from "@/app/(auth)/lib/auth-wrapper";
 import { AppRoutes } from "@/config/routes";
+import { AuthWrapper } from "@/components/auth/wrapper";
 import { TypographyH3 } from "@/components/ui/typography/h3";
 import { AuthForm } from "../_components/auth-form";
 import { AuthFooter } from "../_components/auth-footer";
@@ -17,4 +17,4 @@ export function SignupPage() {
   );
 }
 
-export default authWrapper(SignupPage, AppRoutes.auth.signup.auth);
+export default AuthWrapper(SignupPage, AppRoutes.auth.signup.auth);

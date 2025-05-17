@@ -1,13 +1,13 @@
 import "server-only";
 import { cookies } from "next/headers";
-import type { MeResponse } from "@repo/shared-lib/api-response/users";
+import type { AuthData, MeResponse } from "@repo/shared-lib/api-response/users";
 import { SESSION_TOKEN_COOKIE } from "@repo/shared-lib/api-response/users";
 import { envServer } from "@/config/env/server";
 
 /**
  * Authenticate user by verifying the session.
  */
-export async function authenticateUser(): Promise<MeResponse["data"] | null> {
+export async function authenticateUser(): Promise<AuthData | null> {
   const cookieStore = await cookies();
 
   try {

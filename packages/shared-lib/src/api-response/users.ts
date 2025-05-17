@@ -15,9 +15,11 @@ export type TokenPayload = {
   expiresAt: Date;
 };
 
-export type MeResponse = ApiResponse<{
+export type AuthData = {
   tokenPayload: TokenPayload;
   user: UserWithoutSensitiveFields;
-}>;
+};
+
+export type MeResponse = ApiResponse<AuthData>;
 
 export const SESSION_TOKEN_COOKIE = "session_token";

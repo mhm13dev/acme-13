@@ -1,26 +1,36 @@
-import { AuthWrapperType } from "@/app/(auth)/lib/constants";
+import { type AuthWrapperType } from "@/components/auth/types";
+
+type RouteItem = {
+  title: string;
+  path: string;
+  auth: AuthWrapperType;
+};
+
+type AppRoutesType = {
+  [key: string]: RouteItem | { [key: string]: RouteItem };
+};
 
 export const AppRoutes = {
   auth: {
     login: {
       title: "Login",
       path: "/login",
-      auth: AuthWrapperType.publicOnly,
+      auth: "public-only",
     },
     signup: {
       title: "Signup",
       path: "/signup",
-      auth: AuthWrapperType.publicOnly,
+      auth: "public-only",
     },
   },
   home: {
     title: "Home",
     path: "/",
-    auth: AuthWrapperType.withAuth,
+    auth: "with-auth",
   },
   selectOrganization: {
     title: "Select Organization",
     path: "/select-organization",
-    auth: AuthWrapperType.withAuth,
+    auth: "with-auth",
   },
-} as const;
+} satisfies AppRoutesType;
