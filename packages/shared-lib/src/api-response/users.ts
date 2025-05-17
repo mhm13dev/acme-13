@@ -1,4 +1,3 @@
-import type { JWTPayload } from "jose";
 import type { UserWithoutSensitiveFields } from "@repo/db";
 import type { ApiResponse } from "./index.js";
 
@@ -10,11 +9,15 @@ export type LoginUserResponse = ApiResponse<{
   user: UserWithoutSensitiveFields;
 }>;
 
+export type TokenPayload = {
+  userId: number;
+  sessionId: string;
+  expiresAt: Date;
+};
+
 export type MeResponse = ApiResponse<{
+  tokenPayload: TokenPayload;
   user: UserWithoutSensitiveFields;
 }>;
 
-export interface IJwtPayload extends JWTPayload {
-  sub: string;
-  email: string;
-}
+export const SESSION_TOKEN_COOKIE = "session_token";

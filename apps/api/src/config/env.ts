@@ -21,18 +21,16 @@ const envSchema = z.object({
     .transform((val) => val.split(",")),
 
   // AUTH
-  JWT_ALGORITHM: z.enum(["RS256"]).default("RS256"),
-  ACCESS_TOKEN_PRIVATE_KEY_PEM: z.string().trim(),
-  ACCESS_TOKEN_PUBLIC_KEY_PEM: z.string().trim(),
+  COOKIE_SECRET: z.string().trim(),
   /**
-   * Access token expiry in seconds
+   * Session expiry in milliseconds
    */
-  ACCESS_TOKEN_EXPIRY: z
+  SESSION_EXPIRY: z
     .string()
     .trim()
-    .regex(/\d{1,2}[md]/, "JWT expiry must be in the format of '1d' or '15m'")
+    .regex(/\d{1,2}[md]/, "Session expiry must be in the format of '1d' or '15m'")
     .default("15m")
-    .transform((val) => ms(val as ms.StringValue) / 1000),
+    .transform((val) => ms(val as ms.StringValue)),
 });
 
 export const env = envSchema.parse(process.env);

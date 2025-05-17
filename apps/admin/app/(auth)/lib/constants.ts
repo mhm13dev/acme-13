@@ -1,5 +1,3 @@
-export const ACCESS_TOKEN_COOKIE = "accessToken";
-
 export const AuthWrapperType = {
   withAuth: "with-auth",
   publicOnly: "public-only",

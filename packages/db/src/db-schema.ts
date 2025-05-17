@@ -4,6 +4,7 @@ import { organizationsRelations, organizationsTable } from "./tables/organizatio
 import { orgMembersRelations, orgMembersTable } from "./tables/org-members.table.js";
 import { clientsRelations, clientsTable } from "./tables/clients.table.js";
 import { locationsRelations, locationsTable } from "./tables/locations.table.js";
+import { sessionsRelations, sessionsTable } from "./tables/sessions.table.js";
 
 export const DbSchema = {
   usersTable,
@@ -16,6 +17,8 @@ export const DbSchema = {
   clientsRelations,
   locationsTable,
   locationsRelations,
+  sessionsTable,
+  sessionsRelations,
 };
 export type DbSchema = typeof DbSchema;
 

@@ -1,31 +1,37 @@
 import "server-only";
 import { cookies } from "next/headers";
-import * as jose from "jose";
-import { IJwtPayload } from "@repo/shared-lib/api-response/users";
+import type { MeResponse } from "@repo/shared-lib/api-response/users";
+import { SESSION_TOKEN_COOKIE } from "@repo/shared-lib/api-response/users";
 import { envServer } from "@/config/env/server";
-import { ACCESS_TOKEN_COOKIE } from "./constants";
-
-const accessTokenPublicKey = await jose.importSPKI(envServer.ACCESS_TOKEN_PUBLIC_KEY_PEM, envServer.JWT_ALGORITHM);
 
 /**
- * Authenticate user by verifying the access token.
+ * Authenticate user by verifying the session.
  */
-export async function authenticateUser(): Promise<IJwtPayload | null> {
+export async function authenticateUser(): Promise<MeResponse["data"] | null> {
   const cookieStore = await cookies();
 
   try {
-    const accessToken = cookieStore.get(ACCESS_TOKEN_COOKIE);
+    const sessionTokenCookie = cookieStore.get(SESSION_TOKEN_COOKIE);
 
-    if (!accessToken?.value) {
-      throw new Error("Access token not found");
+    if (!sessionTokenCookie?.value) {
+      throw new Error("Unauthorized");
     }
 
-    // Verify access token
-    const { payload } = await jose.jwtVerify<IJwtPayload>(accessToken.value, accessTokenPublicKey, {
-      algorithms: [envServer.JWT_ALGORITHM],
+    const response = await fetch(`${envServer.NEXT_PUBLIC_API_URL}/users/me`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        Cookie: `${sessionTokenCookie.name}=${sessionTokenCookie.value}`,
+      },
     });
 
-    return payload;
+    if (response.status !== 200) {
+      throw new Error("Unauthorized");
+    }
+
+    const { data } = (await response.json()) as MeResponse;
+
+    return data;
   } catch {
     return null;
   }

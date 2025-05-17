@@ -1,16 +1,12 @@
+import { randomBytes } from "node:crypto";
 import * as argon2 from "argon2";
 import { eq } from "drizzle-orm";
-import * as jose from "jose";
 import cloneDeep from "clone-deep";
 import { ApiResponseCode } from "@repo/shared-lib/api-response";
-import type { IJwtPayload } from "@repo/shared-lib/api-response/users";
-import { db, usersTable, type User, type UserWithoutSensitiveFields } from "@repo/db";
+import type { TokenPayload } from "@repo/shared-lib/api-response/users";
+import { db, sessionsTable, usersTable, type Session, type UserWithoutSensitiveFields } from "@repo/db";
 import { env } from "../../config/env.js";
 import { ApiError } from "../../utils/api-error.js";
-
-// Prepare JWT secret
-const accessTokenPrivateKey = await jose.importPKCS8(env.ACCESS_TOKEN_PRIVATE_KEY_PEM, env.JWT_ALGORITHM);
-const accessTokenPublicKey = await jose.importSPKI(env.ACCESS_TOKEN_PUBLIC_KEY_PEM, env.JWT_ALGORITHM);
 
 /**
  * Signup a new user
@@ -50,7 +46,7 @@ export async function signupUser(params: { email: string; password: string }): P
  */
 export async function loginUser(params: { email: string; password: string }): Promise<{
   user: UserWithoutSensitiveFields;
-  accessToken: string;
+  sessionId: string;
 }> {
   const { email, password } = params;
 
@@ -66,32 +62,35 @@ export async function loginUser(params: { email: string; password: string }): Pr
     throw new ApiError(ApiResponseCode.resource_not_found, "User not found", 404);
   }
 
-  // Generate access token
-  const { accessToken } = await generateAccessToken({ user });
+  // Generate session
+  const session = await generateSession({ userId: user.id });
 
-  return { user: omitSensitiveUserFields(user), accessToken };
+  return { user: omitSensitiveUserFields(user), sessionId: session.sessionId };
 }
 
 /**
- * Generate access token
+ * Generate Session
  */
-async function generateAccessToken(params: { user: Pick<User, "id" | "email"> }): Promise<{ accessToken: string }> {
-  const { user } = params;
+async function generateSession(params: { userId: number }): Promise<Session> {
+  const { userId } = params;
 
-  const payload: IJwtPayload = {
-    sub: user.id.toString(),
-    email: user.email,
-  };
+  // Generate session ID with prefix and timestamp
+  const prefix = "sess";
+  const timestamp = Date.now().toString(36); // timestamp in base36
+  const randomComponent = randomBytes(32).toString("base64url"); // random component in base64url
+  const sessionId = `${prefix}:${timestamp}:${randomComponent}`; // session id
 
-  const accessTokenExpiresAt = Math.floor(Date.now() / 1000) + env.ACCESS_TOKEN_EXPIRY;
+  const [session] = await db
+    .insert(sessionsTable)
+    .values({
+      sessionId,
+      userId,
+      expiresAt: new Date(Date.now() + env.SESSION_EXPIRY),
+    })
+    .returning()
+    .execute();
 
-  const accessToken = await new jose.SignJWT(payload)
-    .setProtectedHeader({ alg: env.JWT_ALGORITHM })
-    .setIssuedAt()
-    .setExpirationTime(accessTokenExpiresAt)
-    .sign(accessTokenPrivateKey);
-
-  return { accessToken };
+  return session;
 }
 
 /**
@@ -108,20 +107,32 @@ export async function loadUser(userId: number): Promise<UserWithoutSensitiveFiel
 }
 
 /**
- * Verify access token
+ * Verify Session
  */
-export async function verifyAccessToken(token: string): Promise<{
+export async function verifySession(sessionId: string): Promise<{
   loadUser: () => Promise<UserWithoutSensitiveFields>;
-  jwtPayload: IJwtPayload;
+  tokenPayload: TokenPayload;
 }> {
   try {
-    const { payload } = await jose.jwtVerify<IJwtPayload>(token, accessTokenPublicKey, {
-      algorithms: [env.JWT_ALGORITHM],
-    });
+    const [session] = await db.select().from(sessionsTable).where(eq(sessionsTable.sessionId, sessionId)).execute();
+
+    if (!session) {
+      throw Error("Invalid session token");
+    }
+
+    if (session.expiresAt < new Date()) {
+      await db.delete(sessionsTable).where(eq(sessionsTable.sessionId, sessionId)).execute();
+      throw Error("Session expired");
+    }
+
     return {
       // Get user from database on demand
-      loadUser: () => loadUser(Number(payload.sub)),
-      jwtPayload: payload,
+      loadUser: () => loadUser(Number(session.userId)),
+      tokenPayload: {
+        userId: session.userId,
+        sessionId: session.sessionId,
+        expiresAt: session.expiresAt,
+      },
     };
   } catch {
     throw new ApiError(ApiResponseCode.unauthorized, "Invalid access token. Please login again.", 401);

@@ -2,7 +2,6 @@ import { AxiosError } from "axios";
 import { AuthFormData } from "@repo/shared-lib/zod-schemas";
 import { ApiResponse } from "@repo/shared-lib/api-response";
 import { LoginUserResponse, SignupUserResponse } from "@repo/shared-lib/api-response/users";
-import { envClient } from "@/config/env/client";
 import { axiosApi } from "@/lib/axios";
 
 /**
@@ -10,7 +9,7 @@ import { axiosApi } from "@/lib/axios";
  */
 export const signupUser = async (authFormData: AuthFormData): Promise<ApiResponse> => {
   try {
-    await axiosApi.post<SignupUserResponse>(`${envClient.NEXT_PUBLIC_API_URL}/users/signup`, authFormData);
+    await axiosApi.post<SignupUserResponse>("/users/signup", authFormData);
     return await loginUser(authFormData);
   } catch (error) {
     if (error instanceof AxiosError) {

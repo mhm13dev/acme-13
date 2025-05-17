@@ -1,9 +1,14 @@
 import { Hono } from "hono";
-import { setCookie } from "hono/cookie";
+import { setSignedCookie } from "hono/cookie";
 import { zValidator } from "@hono/zod-validator";
 import { authFormDataSchema } from "@repo/shared-lib/zod-schemas";
 import { ApiResponse, ApiResponseCode } from "@repo/shared-lib/api-response";
-import type { LoginUserResponse, MeResponse, SignupUserResponse } from "@repo/shared-lib/api-response/users";
+import {
+  SESSION_TOKEN_COOKIE,
+  type LoginUserResponse,
+  type MeResponse,
+  type SignupUserResponse,
+} from "@repo/shared-lib/api-response/users";
 import { auth } from "../../middlewares/auth.middleware.js";
 import type { HonoAppEnv } from "../../app.js";
 import { env } from "../../config/env.js";
@@ -38,19 +43,19 @@ export const users = new Hono<HonoAppEnv>()
   .post("/login", zValidator("json", authFormDataSchema), async (ctx) => {
     const { email, password } = ctx.req.valid("json");
 
-    const { user, accessToken } = await loginUser({
+    const { user, sessionId } = await loginUser({
       email,
       password,
     });
 
-    // Set access token in cookie
-    setCookie(ctx, "accessToken", accessToken, {
+    // Set session token in cookie
+    await setSignedCookie(ctx, SESSION_TOKEN_COOKIE, sessionId, env.COOKIE_SECRET, {
       path: "/",
       httpOnly: true,
       domain: env.BASE_DOMAIN,
       secure: true,
       sameSite: "Lax",
-      maxAge: env.ACCESS_TOKEN_EXPIRY,
+      maxAge: Math.floor(env.SESSION_EXPIRY / 1000),
     });
 
     return ctx.json<LoginUserResponse>(
@@ -75,6 +80,7 @@ export const users = new Hono<HonoAppEnv>()
         message: "Current user",
         data: {
           user: await ctx.get("user").load(),
+          tokenPayload: ctx.get("tokenPayload"),
         },
       }),
       200

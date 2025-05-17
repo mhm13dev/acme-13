@@ -8,6 +8,8 @@ export { clientsTable, clientsRelations, type Client } from "./tables/clients.ta
 
 export { locationsTable, locationsRelations, type Location } from "./tables/locations.table.js";
 
+export { sessionsTable, sessionsRelations, type Session } from "./tables/sessions.table.js";
+
 export { DbSchema, type DbTablesWithRelations } from "./db-schema.js";
 
 export { db } from "./conn.js";
