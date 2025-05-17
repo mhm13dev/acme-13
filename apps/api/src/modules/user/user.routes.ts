@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { setSignedCookie } from "hono/cookie";
+import { deleteCookie, setSignedCookie } from "hono/cookie";
 import { zValidator } from "@hono/zod-validator";
 import { authFormDataSchema } from "@repo/shared-lib/zod-schemas";
 import { ApiResponse, ApiResponseCode } from "@repo/shared-lib/api-response";
@@ -12,7 +12,7 @@ import {
 import { auth } from "../../middlewares/auth.middleware.js";
 import type { HonoAppEnv } from "../../app.js";
 import { env } from "../../config/env.js";
-import { loginUser, signupUser } from "./user.service.js";
+import { loginUser, logoutUser, signupUser } from "./user.service.js";
 
 export const users = new Hono<HonoAppEnv>()
   .basePath("/users")
@@ -65,6 +65,22 @@ export const users = new Hono<HonoAppEnv>()
         data: {
           user,
         },
+      }),
+      200
+    );
+  })
+  .post("/logout", auth, async (ctx) => {
+    const { sessionId } = ctx.get("tokenPayload");
+
+    await logoutUser(sessionId);
+
+    deleteCookie(ctx, SESSION_TOKEN_COOKIE);
+
+    return ctx.json<ApiResponse<null>>(
+      new ApiResponse({
+        response_code: ApiResponseCode.ok,
+        message: "Logged out successfully",
+        data: null,
       }),
       200
     );

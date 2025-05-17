@@ -28,9 +28,11 @@ export const AppRoutes = {
     path: "/",
     auth: "with-auth",
   },
-  selectOrganization: {
-    title: "Select Organization",
-    path: "/select-organization",
-    auth: "with-auth",
+  organization: {
+    select: {
+      title: "Select Organization",
+      path: "/organization/select",
+      auth: "with-auth",
+    },
   },
 } satisfies AppRoutesType;

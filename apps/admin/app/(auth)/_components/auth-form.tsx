@@ -38,7 +38,7 @@ export const AuthForm: React.FC<Props> = ({ formType }) => {
     const response = await submitAction(formData);
 
     if (response.response_code === "ok") {
-      router.push(AppRoutes.selectOrganization.path);
+      router.push(AppRoutes.organization.select.path);
     } else {
       setError("root", {
         message: response.message,

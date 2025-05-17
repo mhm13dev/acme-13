@@ -69,6 +69,13 @@ export async function loginUser(params: { email: string; password: string }): Pr
 }
 
 /**
+ * Logout a user
+ */
+export async function logoutUser(sessionId: string): Promise<void> {
+  await db.delete(sessionsTable).where(eq(sessionsTable.sessionId, sessionId)).execute();
+}
+
+/**
  * Generate Session
  */
 async function generateSession(params: { userId: number }): Promise<Session> {
