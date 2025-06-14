@@ -1,9 +1,9 @@
 import { relations } from "drizzle-orm";
 import { integer, pgTable, varchar } from "drizzle-orm/pg-core";
-import { timestamps } from "../helpers/columns.helpers.js";
-import { organizationsTable } from "./organizations.table.js";
-import { orgMembersTable } from "./org-members.table.js";
-import { sessionsTable } from "./sessions.table.js";
+import { timestamps } from "../helpers/columns.helpers.ts";
+import { organizationsTable } from "./organizations.table.ts";
+import { orgMembersTable } from "./org-members.table.ts";
+import { sessionsTable } from "./sessions.table.ts";
 
 export const usersTable = pgTable("users", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),

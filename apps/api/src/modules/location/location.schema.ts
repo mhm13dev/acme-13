@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { idSchema } from "../../common/common.schema.js";
+import { idSchema } from "../../common/common.schema.ts";
 
 export const locationsBaseParamsSchema = z.object({
   orgId: idSchema,

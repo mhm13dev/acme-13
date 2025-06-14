@@ -33,4 +33,4 @@ const envSchema = z.object({
     .transform((val) => ms(val as ms.StringValue)),
 });
 
-export const env = envSchema.parse(process.env);
+export const env = envSchema.parse(Bun.env);

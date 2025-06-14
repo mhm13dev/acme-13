@@ -1,5 +1,5 @@
 import type { DrizzleConfig } from "drizzle-orm";
-import { env } from "./config/env.js";
+import { env } from "./config/env.ts";
 
 /**
  * Database configuration.

@@ -1,6 +1,8 @@
 import { db, locationsTable, type Location } from "@repo/db";
-import { mustBeOrgMember } from "../org-member/org-member.service.js";
-import { clientMustExist } from "../client/client.service.js";
+import { mustBeOrgMember } from "../org-member/org-member.service.ts";
+import { clientMustExist } from "../client/client.service.ts";
+import { ApiError } from "../../utils/api-error.ts";
+import { ApiResponseCode } from "@repo/shared-lib/api-response";
 
 /**
  * Create a new Location
@@ -41,6 +43,10 @@ export async function createLocation(params: {
 
     return location;
   });
+
+  if (!location) {
+    throw new ApiError(ApiResponseCode.internal_server_error, "Failed to create location", 500);
+  }
 
   return location;
 }

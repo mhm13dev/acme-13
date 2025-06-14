@@ -9,10 +9,10 @@ import {
   type MeResponse,
   type SignupUserResponse,
 } from "@repo/shared-lib/api-response/users";
-import { auth } from "../../middlewares/auth.middleware.js";
-import type { HonoAppEnv } from "../../app.js";
-import { env } from "../../config/env.js";
-import { loginUser, logoutUser, signupUser } from "./user.service.js";
+import { auth } from "../../middlewares/auth.middleware.ts";
+import type { HonoAppEnv } from "../../app.ts";
+import { env } from "../../config/env.ts";
+import { loginUser, logoutUser, signupUser } from "./user.service.ts";
 
 export const users = new Hono<HonoAppEnv>()
   .basePath("/users")

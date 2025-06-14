@@ -1,5 +1,5 @@
 import type { UserWithoutSensitiveFields } from "@repo/db";
-import type { ApiResponse } from "./index.js";
+import type { ApiResponse } from "./index.ts";
 
 export type SignupUserResponse = ApiResponse<{
   user: UserWithoutSensitiveFields;

@@ -1,15 +1,17 @@
 {
   "name": "acme-13",
   "version": "1.0.0",
+  "type": "module",
   "private": true,
   "author": "mhm13dev",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "pnpm -r --parallel dev",
-    "build": "pnpm -r run build",
-    "start": "pnpm -r run start",
     "format": "prettier --write ."
   },
   "devDependencies": {
-    "prettier": "3.5.3"
+    "prettier": "^3.5.3"
   }
 }

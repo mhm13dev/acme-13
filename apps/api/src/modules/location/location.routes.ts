@@ -1,11 +1,11 @@
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { ApiResponse, ApiResponseCode } from "@repo/shared-lib/api-response";
-import { auth } from "../../middlewares/auth.middleware.js";
-import type { HonoAppEnv } from "../../app.js";
-import { paginationSchema } from "../../common/common.schema.js";
-import { locationsBaseParamsSchema, createLocationSchema } from "./location.schema.js";
-import { createLocation, getClientLocations } from "./location.service.js";
+import { auth } from "../../middlewares/auth.middleware.ts";
+import type { HonoAppEnv } from "../../app.ts";
+import { paginationSchema } from "../../common/common.schema.ts";
+import { locationsBaseParamsSchema, createLocationSchema } from "./location.schema.ts";
+import { createLocation, getClientLocations } from "./location.service.ts";
 
 export const locations = new Hono<HonoAppEnv>()
   .basePath("/organizations/:orgId/clients/:clientId/locations")

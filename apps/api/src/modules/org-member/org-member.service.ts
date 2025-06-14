@@ -10,7 +10,7 @@ import {
   type DbSchema,
   type DbTablesWithRelations,
 } from "@repo/db";
-import { ApiError } from "../../utils/api-error.js";
+import { ApiError } from "../../utils/api-error.ts";
 
 /**
  * Create an OrgMember record
@@ -31,6 +31,10 @@ export async function createOrgMember(params: {
     })
     .returning()
     .execute();
+
+  if (!orgMember) {
+    throw new ApiError(ApiResponseCode.internal_server_error, "Failed to create org member", 500);
+  }
 
   return orgMember;
 }

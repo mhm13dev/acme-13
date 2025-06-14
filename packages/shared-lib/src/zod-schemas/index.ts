@@ -1,1 +1,1 @@
-export { authFormDataSchema, type AuthFormData } from "./auth.schema.js";
+export { authFormDataSchema, type AuthFormData } from "./auth.schema.ts";

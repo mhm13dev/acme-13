@@ -2,8 +2,8 @@ import type { PgTransaction } from "drizzle-orm/pg-core";
 import type { NodePgQueryResultHKT } from "drizzle-orm/node-postgres";
 import { ApiResponseCode } from "@repo/shared-lib/api-response";
 import { db, clientsTable, type Client, type DbSchema, type DbTablesWithRelations } from "@repo/db";
-import { ApiError } from "../../utils/api-error.js";
-import { mustBeOrgMember } from "../org-member/org-member.service.js";
+import { ApiError } from "../../utils/api-error.ts";
+import { mustBeOrgMember } from "../org-member/org-member.service.ts";
 
 /**
  * Create a new Client
@@ -32,6 +32,10 @@ export async function createClient(params: { name: string; orgId: number; userId
 
     return client;
   });
+
+  if (!client) {
+    throw new ApiError(ApiResponseCode.internal_server_error, "Failed to create client", 500);
+  }
 
   return client;
 }

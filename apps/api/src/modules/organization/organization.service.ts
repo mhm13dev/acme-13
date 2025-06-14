@@ -1,8 +1,8 @@
 import { eq, getTableColumns } from "drizzle-orm";
 import { ApiResponseCode } from "@repo/shared-lib/api-response";
 import { db, organizationsTable, orgMembersTable, type User, type Organization } from "@repo/db";
-import { ApiError } from "../../utils/api-error.js";
-import { createOrgMember } from "../org-member/org-member.service.js";
+import { ApiError } from "../../utils/api-error.ts";
+import { createOrgMember } from "../org-member/org-member.service.ts";
 
 /**
  * Create a new Organization
@@ -38,6 +38,10 @@ export async function createOrganization(params: {
       })
       .returning()
       .execute();
+
+    if (!organization) {
+      throw new ApiError(ApiResponseCode.internal_server_error, "Failed to create organization", 500);
+    }
 
     // Create an OrgMember record for the owner
     await createOrgMember({

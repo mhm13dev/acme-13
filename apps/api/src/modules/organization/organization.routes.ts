@@ -1,10 +1,10 @@
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { ApiResponse, ApiResponseCode } from "@repo/shared-lib/api-response";
-import { auth } from "../../middlewares/auth.middleware.js";
-import type { HonoAppEnv } from "../../app.js";
-import { createOrganizationSchema } from "./organization.schema.js";
-import { createOrganization, getOrganizationsForMember } from "./organization.service.js";
+import { auth } from "../../middlewares/auth.middleware.ts";
+import type { HonoAppEnv } from "../../app.ts";
+import { createOrganizationSchema } from "./organization.schema.ts";
+import { createOrganization, getOrganizationsForMember } from "./organization.service.ts";
 
 export const organizations = new Hono<HonoAppEnv>()
   .basePath("/organizations")

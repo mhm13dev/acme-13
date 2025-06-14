@@ -5,8 +5,8 @@ import cloneDeep from "clone-deep";
 import { ApiResponseCode } from "@repo/shared-lib/api-response";
 import type { TokenPayload } from "@repo/shared-lib/api-response/users";
 import { db, sessionsTable, usersTable, type Session, type UserWithoutSensitiveFields } from "@repo/db";
-import { env } from "../../config/env.js";
-import { ApiError } from "../../utils/api-error.js";
+import { env } from "../../config/env.ts";
+import { ApiError } from "../../utils/api-error.ts";
 
 /**
  * Signup a new user
@@ -37,6 +37,10 @@ export async function signupUser(params: { email: string; password: string }): P
     })
     .returning()
     .execute();
+
+  if (!user) {
+    throw new ApiError(ApiResponseCode.internal_server_error, "Failed to create user", 500);
+  }
 
   return omitSensitiveUserFields(user);
 }
@@ -96,6 +100,10 @@ async function generateSession(params: { userId: number }): Promise<Session> {
     })
     .returning()
     .execute();
+
+  if (!session) {
+    throw new ApiError(ApiResponseCode.internal_server_error, "Failed to generate session", 500);
+  }
 
   return session;
 }
