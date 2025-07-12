@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { deleteCookie, setSignedCookie } from "hono/cookie";
 import { zValidator } from "@hono/zod-validator";
+import { env } from "@repo/env/server";
 import { authFormDataSchema } from "@repo/shared-lib/zod-schemas";
 import { ApiResponse, ApiResponseCode } from "@repo/shared-lib/api-response";
 import {
@@ -11,7 +12,6 @@ import {
 } from "@repo/shared-lib/api-response/users";
 import { auth } from "../../middlewares/auth.middleware.ts";
 import type { HonoAppEnv } from "../../app.ts";
-import { env } from "../../config/env.ts";
 import { loginUser, logoutUser, signupUser } from "./user.service.ts";
 
 export const users = new Hono<HonoAppEnv>()

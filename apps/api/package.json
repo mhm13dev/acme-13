@@ -11,6 +11,7 @@
   "dependencies": {
     "@repo/db": "workspace:*",
     "@repo/shared-lib": "workspace:*",
+    "@repo/env": "workspace:*",
     "@hono/zod-validator": "^0.7.0",
     "argon2": "^0.43.0",
     "clone-deep": "^4.0.1",

@@ -1,7 +1,7 @@
 import { drizzle } from "drizzle-orm/node-postgres";
-import { DbSchema } from "@repo/db";
-import { env } from "./config/env.ts";
+import { env } from "@repo/env/db";
 import { dbConfig } from "./db.config.ts";
+import { DbSchema } from "./index.ts";
 
 /**
  * Database instance.

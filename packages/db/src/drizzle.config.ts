@@ -1,5 +1,5 @@
 import { defineConfig } from "drizzle-kit";
-import { env } from "./config/env.ts";
+import { env } from "@repo/env/db";
 import { dbConfig } from "./db.config.ts";
 
 /**

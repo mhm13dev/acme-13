@@ -1,19 +1,18 @@
 import path from "node:path";
 import dotenv from "dotenv";
 import { z } from "zod";
-
-const projectRoot = path.resolve(process.cwd(), "../../.env");
+import { appEnv, databaseUrl } from "../schema";
 
 dotenv.config({
-  path: projectRoot,
+  path: [path.resolve(__dirname, ".env"), path.resolve(__dirname, "..", ".env")],
 });
 
 const envSchema = z.object({
   // CORE
-  APP_ENV: z.enum(["development", "staging", "production"]).default("production"),
+  APP_ENV: appEnv,
 
   // DATABASE
-  DATABASE_URL: z.string().trim(),
+  DATABASE_URL: databaseUrl,
 });
 
 export const env = envSchema.parse(Bun.env);

@@ -1,8 +1,8 @@
 import "server-only";
 import { cookies } from "next/headers";
+import { envServer } from "@repo/env/admin/server";
 import type { AuthData, MeResponse } from "@repo/shared-lib/api-response/users";
 import { SESSION_TOKEN_COOKIE } from "@repo/shared-lib/api-response/users";
-import { envServer } from "@/config/env/server";
 
 /**
  * Authenticate user by verifying the session.

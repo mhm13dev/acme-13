@@ -2,10 +2,10 @@ import { randomBytes } from "node:crypto";
 import * as argon2 from "argon2";
 import { eq } from "drizzle-orm";
 import cloneDeep from "clone-deep";
+import { env } from "@repo/env/server";
 import { ApiResponseCode } from "@repo/shared-lib/api-response";
 import type { TokenPayload } from "@repo/shared-lib/api-response/users";
 import { db, sessionsTable, usersTable, type Session, type UserWithoutSensitiveFields } from "@repo/db";
-import { env } from "../../config/env.ts";
 import { ApiError } from "../../utils/api-error.ts";
 
 /**

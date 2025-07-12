@@ -1,11 +1,11 @@
 import { createMiddleware } from "hono/factory";
 import { getSignedCookie } from "hono/cookie";
+import { env } from "@repo/env/server";
 import { ApiResponseCode } from "@repo/shared-lib/api-response";
 import { SESSION_TOKEN_COOKIE, type TokenPayload } from "@repo/shared-lib/api-response/users";
 import type { UserWithoutSensitiveFields } from "@repo/db";
 import { verifySession } from "../modules/user/user.service.ts";
 import { ApiError } from "../utils/api-error.ts";
-import { env } from "../config/env.ts";
 import type { HonoAppEnv } from "../app.ts";
 
 interface AuthMiddlewareEnv extends HonoAppEnv {

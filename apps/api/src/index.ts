@@ -1,4 +1,4 @@
-import { env } from "./config/env.ts";
+import { env } from "@repo/env/server";
 import { app } from "./app.ts";
 
 const port = env.PORT;
