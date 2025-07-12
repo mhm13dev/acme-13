@@ -1,16 +1,17 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import type { Variables, Bindings } from "hono/types";
+import type { Variables } from "hono/types";
+import type { HttpBindings } from "@hono/node-server";
 import { env } from "@repo/env/server";
 import { ApiResponse, ApiResponseCode } from "@repo/shared-lib/api-response";
-import { users } from "./modules/user/user.routes.ts";
-import { organizations } from "./modules/organization/organization.routes.ts";
-import { clients } from "./modules/client/client.routes.ts";
-import { locations } from "./modules/location/location.routes.ts";
-import { ApiError } from "./utils/api-error.ts";
+import { users } from "./modules/user/user.routes.js";
+import { organizations } from "./modules/organization/organization.routes.js";
+import { clients } from "./modules/client/client.routes.js";
+import { locations } from "./modules/location/location.routes.js";
+import { ApiError } from "./utils/api-error.js";
 
 export interface HonoAppEnv {
-  Bindings: Bindings;
+  Bindings: HttpBindings;
   Variables: Variables;
 }
 

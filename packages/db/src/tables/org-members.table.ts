@@ -1,8 +1,8 @@
 import { relations } from "drizzle-orm";
 import { integer, pgTable, unique } from "drizzle-orm/pg-core";
-import { timestamps } from "../helpers/columns.helpers.ts";
-import { organizationsTable } from "./organizations.table.ts";
-import { usersTable } from "./users.table.ts";
+import { timestamps } from "../helpers/columns.helpers.js";
+import { organizationsTable } from "./organizations.table.js";
+import { usersTable } from "./users.table.js";
 
 export const orgMembersTable = pgTable(
   "org_members",

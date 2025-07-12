@@ -6,7 +6,7 @@ import { env } from "@repo/env/server";
 import { ApiResponseCode } from "@repo/shared-lib/api-response";
 import type { TokenPayload } from "@repo/shared-lib/api-response/users";
 import { db, sessionsTable, usersTable, type Session, type UserWithoutSensitiveFields } from "@repo/db";
-import { ApiError } from "../../utils/api-error.ts";
+import { ApiError } from "../../utils/api-error.js";
 
 /**
  * Signup a new user

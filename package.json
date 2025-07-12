@@ -4,11 +4,10 @@
   "type": "module",
   "private": true,
   "author": "mhm13dev",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "scripts": {
+    "dev": "pnpm -r --parallel dev",
+    "build": "pnpm -r run build",
+    "start": "pnpm -r run start",
     "format": "prettier --write ."
   },
   "devDependencies": {

@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 import slugify from "slugify";
 
 export const createOrganizationSchema = z.object({
@@ -7,5 +7,5 @@ export const createOrganizationSchema = z.object({
     .string()
     .trim()
     .min(1)
-    .transform((val) => slugify(val, { lower: true, strict: true })),
+    .transform((val) => slugify.default(val, { lower: true, strict: true })),
 });

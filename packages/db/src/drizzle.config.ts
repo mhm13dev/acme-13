@@ -1,6 +1,6 @@
 import { defineConfig } from "drizzle-kit";
-import { env } from "@repo/env/db";
-import { dbConfig } from "./db.config.ts";
+import { env } from "../../env/dist/db.env.js";
+import { dbConfig } from "./db.config.js";
 
 /**
  * For Drizzle Kit.

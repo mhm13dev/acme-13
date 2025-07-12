@@ -1,11 +1,16 @@
 import path from "node:path";
 import dotenv from "dotenv";
-import { z } from "zod";
+import { z } from "zod/v4";
 import ms from "ms";
-import { appEnv } from "../schema";
+import { appEnv } from "./schema.js";
+
+const parsedEnv = {};
+
+const dirname = path.dirname(new URL(import.meta.url).pathname);
 
 dotenv.config({
-  path: [path.resolve(__dirname, ".env"), path.resolve(__dirname, "..", ".env")],
+  path: [path.resolve(dirname, "../.server.env"), path.resolve(dirname, "../.shared.env")],
+  processEnv: parsedEnv,
 });
 
 const envSchema = z.object({
@@ -32,4 +37,4 @@ const envSchema = z.object({
     .transform((val) => ms(val as ms.StringValue)),
 });
 
-export const env = envSchema.parse(Bun.env);
+export const env = envSchema.parse(parsedEnv);

@@ -5,32 +5,34 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "typecheck": "tsc --noEmit",
-    "db:generate": "drizzle-kit generate --config ./src/drizzle.config.ts",
-    "db:migrate": "drizzle-kit migrate --config ./src/drizzle.config.ts",
-    "db:studio": "drizzle-kit studio --config ./src/drizzle.config.ts",
+    "dev": "tsc --watch --preserveWatchOutput",
+    "build": "tsc",
+    "db:drizzle-kit": "NODE_OPTIONS='--import tsx' drizzle-kit",
+    "db:generate": "pnpm run db:drizzle-kit generate --config ./src/drizzle.config.ts",
+    "db:migrate": "pnpm run db:drizzle-kit migrate --config ./src/drizzle.config.ts",
+    "db:studio": "pnpm run db:drizzle-kit studio --config ./src/drizzle.config.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "@repo/env": "workspace:*",
-    "dotenv": "^16.5.0",
-    "drizzle-orm": "^0.38.4",
+    "dotenv": "^17.2.0",
+    "drizzle-orm": "^0.44.2",
     "drizzle-seed": "^0.3.1",
     "pg": "^8.16.0",
-    "zod": "^3.25.64"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@eslint/js": "^9.29.0",
     "@types/pg": "^8.15.4",
-    "drizzle-kit": "^0.30.5",
+    "drizzle-kit": "^0.31.4",
     "eslint": "^9.29.0",
     "eslint-config-prettier": "^10.1.5",
+    "tsx": "^4.19.3",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.34.0",
-    "@types/bun": "latest"
+    "typescript-eslint": "^8.34.0"
   },
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./dist/index.js"
   }
 }

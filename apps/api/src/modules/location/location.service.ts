@@ -1,8 +1,8 @@
 import { db, locationsTable, type Location } from "@repo/db";
-import { mustBeOrgMember } from "../org-member/org-member.service.ts";
-import { clientMustExist } from "../client/client.service.ts";
-import { ApiError } from "../../utils/api-error.ts";
 import { ApiResponseCode } from "@repo/shared-lib/api-response";
+import { mustBeOrgMember } from "../org-member/org-member.service.js";
+import { clientMustExist } from "../client/client.service.js";
+import { ApiError } from "../../utils/api-error.js";
 
 /**
  * Create a new Location

@@ -10,7 +10,7 @@ import {
   type DbSchema,
   type DbTablesWithRelations,
 } from "@repo/db";
-import { ApiError } from "../../utils/api-error.ts";
+import { ApiError } from "../../utils/api-error.js";
 
 /**
  * Create an OrgMember record

@@ -5,16 +5,17 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "typecheck": "tsc --noEmit",
+    "dev": "tsc --watch --preserveWatchOutput",
+    "build": "tsc",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@repo/db": "workspace:*",
     "jose": "^6.0.11",
-    "zod": "^3.25.64"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@types/bun": "latest",
     "@eslint/js": "^9.29.0",
     "eslint": "^9.29.0",
     "eslint-config-prettier": "^10.1.5",
@@ -22,8 +23,8 @@
     "typescript-eslint": "^8.34.0"
   },
   "exports": {
-    "./zod-schemas": "./src/zod-schemas/index.ts",
-    "./api-response": "./src/api-response/index.ts",
-    "./api-response/users": "./src/api-response/users.ts"
+    "./zod-schemas": "./dist/zod-schemas/index.js",
+    "./api-response": "./dist/api-response/index.js",
+    "./api-response/users": "./dist/api-response/users.js"
   }
 }

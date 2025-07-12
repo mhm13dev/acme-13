@@ -1,6 +1,6 @@
 import { seed } from "drizzle-seed";
 import { usersTable } from "@repo/db";
-import { db } from "../conn.ts";
+import { db } from "../conn.js";
 
 /**
  * Seed Dummy Data.

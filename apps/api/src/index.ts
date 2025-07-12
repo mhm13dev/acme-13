@@ -1,10 +1,11 @@
+import { serve } from "@hono/node-server";
 import { env } from "@repo/env/server";
-import { app } from "./app.ts";
+import { app } from "./app.js";
 
 const port = env.PORT;
 console.log(`Server is running on http://127.0.0.1:${port}`);
 
-export default {
-  port,
+serve({
   fetch: app.fetch,
-};
+  port,
+});

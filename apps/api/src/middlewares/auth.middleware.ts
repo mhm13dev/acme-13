@@ -4,9 +4,9 @@ import { env } from "@repo/env/server";
 import { ApiResponseCode } from "@repo/shared-lib/api-response";
 import { SESSION_TOKEN_COOKIE, type TokenPayload } from "@repo/shared-lib/api-response/users";
 import type { UserWithoutSensitiveFields } from "@repo/db";
-import { verifySession } from "../modules/user/user.service.ts";
-import { ApiError } from "../utils/api-error.ts";
-import type { HonoAppEnv } from "../app.ts";
+import { verifySession } from "../modules/user/user.service.js";
+import { ApiError } from "../utils/api-error.js";
+import type { HonoAppEnv } from "../app.js";
 
 interface AuthMiddlewareEnv extends HonoAppEnv {
   Variables: HonoAppEnv["Variables"] & {
